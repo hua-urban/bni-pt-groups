@@ -1,0 +1,11 @@
+# GAS 後端專案（含 clasp 憑證關聯設定），不進 public repo
+gas/
+
+# clasp / Google OAuth 相關，絕不能外流
+.clasp.json
+.clasprc.json
+*.clasprc.json
+
+# 一般雜項
+.DS_Store
+Thumbs.db
