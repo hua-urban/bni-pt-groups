@@ -473,15 +473,15 @@
 </main>
 
 <footer>
-  BNI 華都更分會 PowerTeam 組別管理系統 · 唯讀看板 ＋ 組長編輯模式（里程碑 2）
+  BNI 華都更分會 PowerTeam 組別管理系統
 </footer>
 
-<!-- 編輯碼 gate（進編輯模式前的門檻，PRD § 4：多一道門檻非真安全，doPost 後端另有校驗） -->
+<!-- 組長密碼 gate（進編輯模式前的門檻，PRD § 4：多一道門檻非真安全，doPost 後端另有校驗） -->
 <div class="modal-overlay" id="codeModalOverlay" hidden>
   <div class="modal-box">
     <h3>組長編輯模式</h3>
-    <p class="modal-hint">輸入編輯碼才能進入編輯模式</p>
-    <input type="password" id="codeInput" class="modal-input" placeholder="輸入編輯碼" autocomplete="off">
+    <p class="modal-hint">輸入你的組長密碼（會員編號）才能進入編輯模式</p>
+    <input type="password" id="codeInput" class="modal-input" placeholder="輸入你的會員編號（例如 007）" autocomplete="off">
     <div class="modal-error" id="codeError"></div>
     <div class="modal-actions">
       <button type="button" class="modal-btn modal-btn-cancel" id="codeCancelBtn">取消</button>
@@ -632,7 +632,13 @@ render(window.PT_SEED || { groups: [], members: [] });
 
 // 讀取 GAS 最新資料並覆蓋畫面；失敗則保留現有畫面（降級不假裝成功）。
 // 里程碑 1：只在冷啟呼叫一次。里程碑 2：doPost 存檔成功後也會呼叫這支重新拉最新分組。
-function loadFromGas() {
+// 里程碑 2.1：opts.retries 給存檔後刷新用——doPost 剛寫完緊接 doGet 偶發失敗/太快會誤閃「連不到後端」
+// 嚇組長以為沒存到（資料其實已寫對），先靜默重試幾次再顯示降級文案。
+function loadFromGas(opts) {
+  opts = opts || {};
+  var retriesLeft = opts.retries || 0;
+  var retryDelayMs = opts.retryDelayMs || 1500;
+
   return fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
     .then(function (res) { return res.json(); })
     .then(function (data) {
@@ -642,6 +648,10 @@ function loadFromGas() {
       return data;
     })
     .catch(function (err) {
+      if (retriesLeft > 0) {
+        return new Promise(function (resolve) { setTimeout(resolve, retryDelayMs); })
+          .then(function () { return loadFromGas({ retries: retriesLeft - 1, retryDelayMs: retryDelayMs }); });
+      }
       console.error(err);
       loadStatusEl.textContent = '⚠️ 連不到後端，目前顯示的是內建初始分組（可能非最新）';
       throw err;
@@ -653,11 +663,18 @@ loadFromGas();
 
 <script>
 /* ============================================================
-   組長編輯模式（里程碑 2）
-   編輯碼只在前端做「多一道門檻」判斷（PRD § 4，非真安全機制）；
-   真正的寫入授權由後端 doPost 對編輯碼做二次校驗（防繞過前端直打 API）。
+   組長編輯模式（里程碑 2 ＋ 2.1：組長密碼）
+   組長密碼＝各組長會員編號，只在前端做「多一道門檻」判斷（PRD § 4，非真安全機制，
+   會員編號本就是看板公開資訊）；真正的寫入授權與身份判斷由後端 doPost 用同一組密碼
+   反查組長身份（不信前端傳來的身份字串，防偽造）。
    ============================================================ */
-const EDIT_CODE = 'hd2026';
+// 五位組長密碼（＝會員編號）。前端只需要「是不是合法密碼」這道門檻，
+// 誰是誰、last_editor 寫誰一律由後端 resolveLeaderByCode_ 決定。
+const LEADER_CODES = ['7', '11', '10', '4', '32'];
+
+function normalizeLeaderCode(raw) {
+  return String(raw || '').trim().replace(/^0+(?=\d)/, '');
+}
 
 let editMode = false;
 let savedEditCode = '';
@@ -695,7 +712,7 @@ function showToast(msg, isError) {
   toastTimer = setTimeout(function () { toastEl.hidden = true; }, 3200);
 }
 
-/* ---------- 編輯碼 gate modal ---------- */
+/* ---------- 組長密碼 gate modal ---------- */
 
 function openCodeModal() {
   codeInput.value = '';
@@ -709,12 +726,13 @@ function closeCodeModal() {
 }
 
 function submitCode() {
-  if (codeInput.value === EDIT_CODE) {
-    savedEditCode = codeInput.value;
+  const normalized = normalizeLeaderCode(codeInput.value);
+  if (LEADER_CODES.indexOf(normalized) !== -1) {
+    savedEditCode = normalized; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
     closeCodeModal();
     enterEditMode();
   } else {
-    codeError.textContent = '編輯碼錯誤，請再試一次';
+    codeError.textContent = '組長密碼不正確，請再試一次';
   }
 }
 
@@ -877,7 +895,7 @@ function saveMember() {
       }
       closeMemberModal();
       showToast('✅ 已儲存：' + data.name);
-      return loadFromGas();
+      return loadFromGas({ retries: 2, retryDelayMs: 1500 });
     })
     .catch(function (err) {
       memberError.textContent = '網路錯誤，請重試：' + err.message;
