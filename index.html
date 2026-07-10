@@ -273,6 +273,178 @@
       font-size: 13px;
     }
   }
+
+  /* ============================================================
+     編輯模式（里程碑 2）
+     ============================================================ */
+  .edit-bar {
+    max-width: 480px;
+    margin: 12px auto 0;
+    padding: 0 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .edit-btn {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .edit-btn.active { background: var(--white); }
+
+  body.edit-mode .member-card {
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+
+  body.edit-mode .member-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+
+  body.edit-mode .member-card::after {
+    content: '✏️';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 26, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 1000;
+  }
+
+  .modal-overlay[hidden] { display: none; }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 22px 20px;
+    width: 100%;
+    max-width: 380px;
+    max-height: 86vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+
+  .modal-box h3 {
+    font-family: 'Noto Serif TC', serif;
+    color: var(--red);
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .modal-hint {
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    margin-bottom: 10px;
+  }
+
+  .modal-label {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    margin: 10px 0 4px;
+  }
+
+  .modal-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    margin-bottom: 6px;
+  }
+
+  .modal-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    margin: 6px 0 10px;
+  }
+
+  .chain-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .chain-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--gray);
+    cursor: pointer;
+  }
+
+  .chain-checkboxes input { width: 17px; height: 17px; }
+
+  .modal-error {
+    color: var(--red);
+    font-size: 12.5px;
+    min-height: 16px;
+    margin-bottom: 4px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .modal-btn-cancel { background: var(--gray); color: var(--ink); }
+  .modal-btn-primary { background: var(--red); color: var(--white); }
+  .modal-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--white);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    z-index: 1100;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  }
+
+  .toast[hidden] { display: none; }
+  .toast.error { background: var(--red); }
 </style>
 </head>
 <body>
@@ -283,6 +455,10 @@
   <div class="search-wrap">
     <input type="text" id="searchInput" placeholder="🔍 找我在哪組（輸入姓名或編號）">
     <div id="searchHint"></div>
+  </div>
+  <div class="edit-bar">
+    <button type="button" id="editToggleBtn" class="edit-btn">🔓 組長編輯模式</button>
+    <button type="button" id="addGuestBtn" class="edit-btn add-guest-btn" hidden>＋ 新增組員</button>
   </div>
 </header>
 
@@ -297,8 +473,49 @@
 </main>
 
 <footer>
-  BNI 華都更分會 PowerTeam 組別管理系統 · 唯讀看板（里程碑 1）
+  BNI 華都更分會 PowerTeam 組別管理系統 · 唯讀看板 ＋ 組長編輯模式（里程碑 2）
 </footer>
+
+<!-- 編輯碼 gate（進編輯模式前的門檻，PRD § 4：多一道門檻非真安全，doPost 後端另有校驗） -->
+<div class="modal-overlay" id="codeModalOverlay" hidden>
+  <div class="modal-box">
+    <h3>組長編輯模式</h3>
+    <p class="modal-hint">輸入編輯碼才能進入編輯模式</p>
+    <input type="password" id="codeInput" class="modal-input" placeholder="輸入編輯碼" autocomplete="off">
+    <div class="modal-error" id="codeError"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-cancel" id="codeCancelBtn">取消</button>
+      <button type="button" class="modal-btn modal-btn-primary" id="codeSubmitBtn">確認</button>
+    </div>
+  </div>
+</div>
+
+<!-- 換組／新增組員共用 modal：checkbox 勾選所屬鏈，全部取消＝移回未分組池 -->
+<div class="modal-overlay" id="memberModalOverlay" hidden>
+  <div class="modal-box">
+    <h3 id="memberModalTitle">編輯組員</h3>
+
+    <div id="guestPickerWrap" hidden>
+      <label class="modal-label" for="rosterSelect">從名冊選人</label>
+      <select id="rosterSelect" class="modal-input"></select>
+      <label class="modal-checkbox-row">
+        <input type="checkbox" id="manualGuestToggle"> 名冊沒有這個人（手動輸入來賓）
+      </label>
+      <input type="text" id="guestNameInput" class="modal-input" placeholder="來賓姓名" hidden>
+      <input type="text" id="guestProfessionInput" class="modal-input" placeholder="專業別（選填）" hidden>
+    </div>
+
+    <div class="chain-checkboxes" id="chainCheckboxes"></div>
+
+    <div class="modal-error" id="memberError"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-cancel" id="memberCancelBtn">取消</button>
+      <button type="button" class="modal-btn modal-btn-primary" id="memberSaveBtn">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
 
 <script src="data.js?v=20260710"></script>
 <script>
@@ -314,6 +531,9 @@ const unassignedEl = document.getElementById('unassignedList');
 const loadStatusEl = document.getElementById('loadStatus');
 const searchInput = document.getElementById('searchInput');
 const searchHint = document.getElementById('searchHint');
+
+// 存最新一份看板資料，供編輯模式（modal 開啟時查該員目前所屬鏈、名冊下拉選單）讀取。
+let LATEST_DATA = { groups: [], members: [] };
 
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -335,6 +555,7 @@ function memberCardHtml(m) {
 }
 
 function render(data) {
+  LATEST_DATA = data;
   const groups = data.groups || [];
   const members = data.members || [];
 
@@ -409,18 +630,265 @@ searchInput.addEventListener('input', applySearch);
 // 冷啟先渲染內嵌 seed，避免 GAS 冷啟 2~4 秒白屏
 render(window.PT_SEED || { groups: [], members: [] });
 
-// GAS 資料到手後靜默覆蓋；失敗則保留 seed 畫面（降級不假裝成功）
-fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
-  .then(function (res) { return res.json(); })
-  .then(function (data) {
-    if (!data || !data.ok) throw new Error('bad response');
-    render(data);
-    loadStatusEl.textContent = '';
-  })
-  .catch(function (err) {
-    console.error(err);
-    loadStatusEl.textContent = '⚠️ 連不到後端，目前顯示的是內建初始分組（可能非最新）';
-  });
+// 讀取 GAS 最新資料並覆蓋畫面；失敗則保留現有畫面（降級不假裝成功）。
+// 里程碑 1：只在冷啟呼叫一次。里程碑 2：doPost 存檔成功後也會呼叫這支重新拉最新分組。
+function loadFromGas() {
+  return fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || !data.ok) throw new Error('bad response');
+      render(data);
+      loadStatusEl.textContent = '';
+      return data;
+    })
+    .catch(function (err) {
+      console.error(err);
+      loadStatusEl.textContent = '⚠️ 連不到後端，目前顯示的是內建初始分組（可能非最新）';
+      throw err;
+    });
+}
+
+loadFromGas();
+</script>
+
+<script>
+/* ============================================================
+   組長編輯模式（里程碑 2）
+   編輯碼只在前端做「多一道門檻」判斷（PRD § 4，非真安全機制）；
+   真正的寫入授權由後端 doPost 對編輯碼做二次校驗（防繞過前端直打 API）。
+   ============================================================ */
+const EDIT_CODE = 'hd2026';
+
+let editMode = false;
+let savedEditCode = '';
+let editingMemberId = null; // 卡片點擊進來的編輯：目前這位的 id；新增組員流程則用 rosterSelect 決定
+
+const editToggleBtn = document.getElementById('editToggleBtn');
+const addGuestBtn = document.getElementById('addGuestBtn');
+
+const codeModalOverlay = document.getElementById('codeModalOverlay');
+const codeInput = document.getElementById('codeInput');
+const codeError = document.getElementById('codeError');
+const codeCancelBtn = document.getElementById('codeCancelBtn');
+const codeSubmitBtn = document.getElementById('codeSubmitBtn');
+
+const memberModalOverlay = document.getElementById('memberModalOverlay');
+const memberModalTitle = document.getElementById('memberModalTitle');
+const guestPickerWrap = document.getElementById('guestPickerWrap');
+const rosterSelect = document.getElementById('rosterSelect');
+const manualGuestToggle = document.getElementById('manualGuestToggle');
+const guestNameInput = document.getElementById('guestNameInput');
+const guestProfessionInput = document.getElementById('guestProfessionInput');
+const chainCheckboxes = document.getElementById('chainCheckboxes');
+const memberError = document.getElementById('memberError');
+const memberCancelBtn = document.getElementById('memberCancelBtn');
+const memberSaveBtn = document.getElementById('memberSaveBtn');
+
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+
+function showToast(msg, isError) {
+  toastEl.textContent = msg;
+  toastEl.classList.toggle('error', !!isError);
+  toastEl.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { toastEl.hidden = true; }, 3200);
+}
+
+/* ---------- 編輯碼 gate modal ---------- */
+
+function openCodeModal() {
+  codeInput.value = '';
+  codeError.textContent = '';
+  codeModalOverlay.hidden = false;
+  codeInput.focus();
+}
+
+function closeCodeModal() {
+  codeModalOverlay.hidden = true;
+}
+
+function submitCode() {
+  if (codeInput.value === EDIT_CODE) {
+    savedEditCode = codeInput.value;
+    closeCodeModal();
+    enterEditMode();
+  } else {
+    codeError.textContent = '編輯碼錯誤，請再試一次';
+  }
+}
+
+function enterEditMode() {
+  editMode = true;
+  document.body.classList.add('edit-mode');
+  editToggleBtn.textContent = '🔒 離開編輯模式';
+  editToggleBtn.classList.add('active');
+  addGuestBtn.hidden = false;
+}
+
+function exitEditMode() {
+  editMode = false;
+  document.body.classList.remove('edit-mode');
+  editToggleBtn.textContent = '🔓 組長編輯模式';
+  editToggleBtn.classList.remove('active');
+  addGuestBtn.hidden = true;
+}
+
+editToggleBtn.addEventListener('click', function () {
+  if (editMode) {
+    exitEditMode();
+  } else {
+    openCodeModal();
+  }
+});
+
+codeCancelBtn.addEventListener('click', closeCodeModal);
+codeSubmitBtn.addEventListener('click', submitCode);
+codeInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') submitCode();
+});
+
+/* ---------- 換組／新增組員共用 modal ---------- */
+
+function chainLabel(code) {
+  const g = (LATEST_DATA.groups || []).find(function (x) { return x.code === code; });
+  return code + (g && g.name ? '｜' + g.name : '');
+}
+
+function buildChainCheckboxes(selectedCodes) {
+  chainCheckboxes.innerHTML = CHAIN_ORDER.map(function (code) {
+    const checked = selectedCodes.indexOf(code) !== -1 ? ' checked' : '';
+    return (
+      '<label>' +
+        '<input type="checkbox" class="chain-cb" value="' + code + '"' + checked + '>' +
+        escapeHtml(chainLabel(code)) +
+      '</label>'
+    );
+  }).join('');
+}
+
+function getCheckedChains() {
+  return Array.from(chainCheckboxes.querySelectorAll('.chain-cb:checked')).map(function (cb) { return cb.value; });
+}
+
+function findMemberById(id) {
+  return (LATEST_DATA.members || []).find(function (m) { return String(m.id) === String(id); });
+}
+
+// 點組員卡開啟：換組／移除（全取消勾選）共用這支
+function openMemberModal(id, name) {
+  editingMemberId = id;
+  const member = findMemberById(id);
+  memberModalTitle.textContent = '編輯組員：' + (member ? member.name : name) + '（#' + id + '）';
+  guestPickerWrap.hidden = true;
+  memberError.textContent = '';
+  buildChainCheckboxes(member ? member.chains : []);
+  memberModalOverlay.hidden = false;
+}
+
+// 「＋ 新增組員」開啟：從 57 人名冊下拉挑人，或手動輸入名冊沒有的臨時來賓
+function openAddGuestModal() {
+  editingMemberId = null;
+  memberModalTitle.textContent = '新增組員';
+  memberError.textContent = '';
+  guestPickerWrap.hidden = false;
+  manualGuestToggle.checked = false;
+  guestNameInput.hidden = true;
+  guestProfessionInput.hidden = true;
+  guestNameInput.value = '';
+  guestProfessionInput.value = '';
+
+  const roster = (LATEST_DATA.members || []).slice().sort(function (a, b) { return Number(a.id) - Number(b.id); });
+  rosterSelect.innerHTML = roster.map(function (m) {
+    return '<option value="' + m.id + '">#' + m.id + ' ' + escapeHtml(m.name) + '</option>';
+  }).join('');
+  rosterSelect.disabled = false;
+
+  if (roster.length) {
+    buildChainCheckboxes(roster[0].chains || []);
+  } else {
+    buildChainCheckboxes([]);
+  }
+  memberModalOverlay.hidden = false;
+}
+
+rosterSelect.addEventListener('change', function () {
+  const m = findMemberById(rosterSelect.value);
+  buildChainCheckboxes(m ? m.chains : []);
+});
+
+manualGuestToggle.addEventListener('change', function () {
+  const manual = manualGuestToggle.checked;
+  guestNameInput.hidden = !manual;
+  guestProfessionInput.hidden = !manual;
+  rosterSelect.disabled = manual;
+  buildChainCheckboxes(manual ? [] : (findMemberById(rosterSelect.value) || {}).chains || []);
+});
+
+function closeMemberModal() {
+  memberModalOverlay.hidden = true;
+}
+
+memberCancelBtn.addEventListener('click', closeMemberModal);
+
+addGuestBtn.addEventListener('click', function () {
+  if (editMode) openAddGuestModal();
+});
+
+// 編輯模式下點任一組員卡（看板欄位或未分組池皆可）→ 開換組 modal
+document.addEventListener('click', function (e) {
+  if (!editMode) return;
+  const card = e.target.closest('.member-card');
+  if (!card) return;
+  openMemberModal(card.getAttribute('data-id'), card.getAttribute('data-name'));
+});
+
+function saveMember() {
+  const chains = getCheckedChains();
+  const isGuestFlow = !guestPickerWrap.hidden;
+  let payload = { code: savedEditCode, chains: chains };
+
+  if (isGuestFlow && manualGuestToggle.checked) {
+    const name = guestNameInput.value.trim();
+    if (!name) {
+      memberError.textContent = '請輸入來賓姓名';
+      return;
+    }
+    payload.isNewGuest = true;
+    payload.name = name;
+    payload.profession = guestProfessionInput.value.trim();
+  } else if (isGuestFlow) {
+    payload.id = rosterSelect.value;
+  } else {
+    payload.id = editingMemberId;
+  }
+
+  memberError.textContent = '';
+  memberSaveBtn.disabled = true;
+  memberSaveBtn.textContent = '儲存中…';
+
+  // text/plain body（不設 Content-Type header，瀏覽器預設 text/plain 避開 CORS preflight，PRD § 6.1）
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || !data.ok) {
+        memberError.textContent = (data && data.error) || '儲存失敗，請重試';
+        return;
+      }
+      closeMemberModal();
+      showToast('✅ 已儲存：' + data.name);
+      return loadFromGas();
+    })
+    .catch(function (err) {
+      memberError.textContent = '網路錯誤，請重試：' + err.message;
+    })
+    .finally(function () {
+      memberSaveBtn.disabled = false;
+      memberSaveBtn.textContent = '儲存';
+    });
+}
+
+memberSaveBtn.addEventListener('click', saveMember);
 </script>
 
 </body>
