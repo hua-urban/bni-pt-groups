@@ -266,6 +266,12 @@
       flex-shrink: 0;
     }
     .unassigned-list .member-card { width: 100%; }
+
+    /* 手機字級一律 ≥13px（PRD § 5.1 RWD 要求），desktop 保留原本較細字級 */
+    .m-profession, .chain-meta, .m-id, .badge-joint, .empty-hint,
+    footer, #searchHint, .column-head .chain-code {
+      font-size: 13px;
+    }
   }
 </style>
 </head>
