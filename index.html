@@ -188,7 +188,14 @@
     margin-top: 2px;
   }
 
-  .badge-joint {
+  .other-chains {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .badge-other-chain {
     display: inline-block;
     background: var(--gold);
     color: var(--ink);
@@ -196,7 +203,6 @@
     font-size: 11px;
     padding: 1px 7px;
     border-radius: 999px;
-    margin-left: 6px;
     vertical-align: middle;
   }
 
@@ -276,7 +282,7 @@
     .unassigned-list .member-card { width: 100%; }
 
     /* 手機字級一律 ≥13px（PRD § 5.1 RWD 要求），desktop 保留原本較細字級 */
-    .m-profession, .chain-meta, .m-id, .badge-joint, .empty-hint,
+    .m-profession, .chain-meta, .m-id, .badge-other-chain, .empty-hint,
     footer, #searchHint, .column-head .chain-code {
       font-size: 13px;
     }
@@ -550,15 +556,21 @@ function escapeHtml(s) {
   });
 }
 
-function memberCardHtml(m) {
-  const joint = m.chains && m.chains.length > 1;
+function memberCardHtml(m, currentCode) {
+  // currentCode：卡片目前所在欄的組別 code；null/undefined＝「尚未分組」區（不排除任何 chain）。
+  const otherChains = (m.chains || []).filter(function (c) { return c !== currentCode; });
+  const pillsHtml = otherChains.length
+    ? '<div class="other-chains">' + otherChains.map(function (c) {
+        return '<span class="badge-other-chain">' + escapeHtml(c) + '組</span>';
+      }).join('') + '</div>'
+    : '';
   return (
     '<div class="member-card" data-id="' + m.id + '" data-name="' + escapeHtml(m.name) + '">' +
       '<div class="m-name">' + escapeHtml(m.name) +
         '<span class="m-id">#' + m.id + '</span>' +
-        (joint ? '<span class="badge-joint">兼</span>' : '') +
       '</div>' +
       '<div class="m-profession">' + escapeHtml(m.profession || '') + '</div>' +
+      pillsHtml +
     '</div>'
   );
 }
@@ -583,7 +595,7 @@ function render(data) {
     const g = groupMeta[code] || { name: code, leader: '', schedule: '' };
     const list = byCode[code] || [];
     const cardsHtml = list.length
-      ? list.map(memberCardHtml).join('')
+      ? list.map(function (m) { return memberCardHtml(m, code); }).join('')
       : '<div class="empty-hint">目前無組員</div>';
     return (
       '<div class="column" data-chain="' + code + '">' +
@@ -600,7 +612,7 @@ function render(data) {
 
   const unassigned = members.filter(function (m) { return !m.chains || m.chains.length === 0; });
   unassignedEl.innerHTML = unassigned.length
-    ? unassigned.map(memberCardHtml).join('')
+    ? unassigned.map(function (m) { return memberCardHtml(m, null); }).join('')
     : '<div class="empty-hint">目前所有夥伴皆已分組</div>';
 
   applySearch();
