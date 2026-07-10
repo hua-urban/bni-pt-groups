@@ -213,18 +213,26 @@
   }
 
   .unassigned-section {
-    margin-top: 26px;
+    margin: 4px 0 20px;
     background: var(--white);
     border: 1px dashed var(--border);
     border-radius: 10px;
-    padding: 16px;
+    padding: 14px 16px;
   }
 
   .unassigned-section h2 {
     font-family: 'Noto Serif TC', serif;
     font-size: 16px;
     color: var(--red);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+  }
+
+  .unassigned-hint {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    margin-left: 6px;
   }
 
   .unassigned-list {
@@ -464,12 +472,13 @@
 
 <main>
   <div id="loadStatus"></div>
-  <div class="board" id="board"></div>
 
   <div class="unassigned-section">
-    <h2>尚未分組</h2>
+    <h2>尚未分組<span class="unassigned-hint">這些夥伴尚未分組，可進編輯模式歸類</span></h2>
     <div class="unassigned-list" id="unassignedList"></div>
   </div>
+
+  <div class="board" id="board"></div>
 </main>
 
 <footer>
