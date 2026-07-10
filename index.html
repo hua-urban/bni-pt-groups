@@ -296,6 +296,7 @@
     margin: 12px auto 0;
     padding: 0 8px;
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
   }
@@ -459,6 +460,91 @@
 
   .toast[hidden] { display: none; }
   .toast.error { background: var(--red); }
+
+  /* ============================================================
+     存檔快照 ＋ 版本歷史（里程碑 3）
+     ============================================================ */
+  .modal-box-wide {
+    max-width: 560px;
+  }
+
+  .history-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .history-row-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .history-meta {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+
+  .chain-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .chain-count-pill {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    padding: 2px 9px;
+  }
+
+  .chain-count-pill-unassigned {
+    color: var(--ink-dim);
+  }
+
+  .history-preview-toggle {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-size: 12.5px;
+    cursor: pointer;
+    padding: 2px 0;
+    text-decoration: underline;
+  }
+
+  .history-preview-wrap {
+    margin: 6px 0;
+    font-size: 12.5px;
+    background: var(--gray);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  .history-preview-col {
+    margin-bottom: 4px;
+  }
+
+  .history-row-actions {
+    margin-top: 6px;
+  }
+
+  .history-restore-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    width: auto;
+    flex: none;
+  }
+
+  .history-restore-locked {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
 </style>
 </head>
 <body>
@@ -473,6 +559,8 @@
   <div class="edit-bar">
     <button type="button" id="editToggleBtn" class="edit-btn">🔓 組長編輯模式</button>
     <button type="button" id="addGuestBtn" class="edit-btn add-guest-btn" hidden>＋ 新增組員</button>
+    <button type="button" id="snapshotBtn" class="edit-btn" hidden>📸 存檔目前版本</button>
+    <button type="button" id="historyBtn" class="edit-btn" hidden>🕓 版本紀錄</button>
   </div>
 </header>
 
@@ -526,6 +614,45 @@
     <div class="modal-actions">
       <button type="button" class="modal-btn modal-btn-cancel" id="memberCancelBtn">取消</button>
       <button type="button" class="modal-btn modal-btn-primary" id="memberSaveBtn">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 存檔目前版本 modal（里程碑 3）：任何組長密碼皆可存 -->
+<div class="modal-overlay" id="snapshotModalOverlay" hidden>
+  <div class="modal-box">
+    <h3>📸 存檔目前版本</h3>
+    <p class="modal-hint">為這個版本命名，之後可在「版本紀錄」找到並還原</p>
+    <input type="text" id="snapshotNameInput" class="modal-input" placeholder="例如：2026-07 月版">
+    <div class="modal-error" id="snapshotError"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-cancel" id="snapshotCancelBtn">取消</button>
+      <button type="button" class="modal-btn modal-btn-primary" id="snapshotSaveBtn">存檔</button>
+    </div>
+  </div>
+</div>
+
+<!-- 版本紀錄面板（里程碑 3）：列出所有快照，還原鈕僅管理員（密碼 7／張瓊安）看得到 -->
+<div class="modal-overlay" id="historyModalOverlay" hidden>
+  <div class="modal-box modal-box-wide">
+    <h3>🕓 版本紀錄</h3>
+    <p class="modal-hint" id="historyHint">載入中…</p>
+    <div id="historyList"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-cancel" id="historyCloseBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 還原二次確認（里程碑 3）：後端 doPost action=restore 仍會再驗一次管理員密碼，前端只是提示層 -->
+<div class="modal-overlay" id="restoreConfirmOverlay" hidden>
+  <div class="modal-box">
+    <h3>確定要還原嗎？</h3>
+    <p class="modal-hint" id="restoreConfirmText"></p>
+    <div class="modal-error" id="restoreError"></div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-cancel" id="restoreCancelBtn">取消</button>
+      <button type="button" class="modal-btn modal-btn-primary" id="restoreConfirmBtn">確定還原</button>
     </div>
   </div>
 </div>
@@ -699,6 +826,7 @@ function normalizeLeaderCode(raw) {
 
 let editMode = false;
 let savedEditCode = '';
+let isAdmin = false; // 密碼 7／張瓊安才 true；只決定「還原鈕要不要出現」，後端 doPost action=restore 仍會再驗一次（里程碑 3）
 let editingMemberId = null; // 卡片點擊進來的編輯：目前這位的 id；新增組員流程則用 rosterSelect 決定
 
 const editToggleBtn = document.getElementById('editToggleBtn');
@@ -750,6 +878,7 @@ function submitCode() {
   const normalized = normalizeLeaderCode(codeInput.value);
   if (LEADER_CODES.indexOf(normalized) !== -1) {
     savedEditCode = normalized; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
+    isAdmin = normalized === '7'; // 只決定「還原鈕要不要出現」；真正授權一律由後端 doPost action=restore 再驗一次
     closeCodeModal();
     enterEditMode();
   } else {
@@ -763,14 +892,19 @@ function enterEditMode() {
   editToggleBtn.textContent = '🔒 離開編輯模式';
   editToggleBtn.classList.add('active');
   addGuestBtn.hidden = false;
+  snapshotBtn.hidden = false;
+  historyBtn.hidden = false;
 }
 
 function exitEditMode() {
   editMode = false;
+  isAdmin = false;
   document.body.classList.remove('edit-mode');
   editToggleBtn.textContent = '🔓 組長編輯模式';
   editToggleBtn.classList.remove('active');
   addGuestBtn.hidden = true;
+  snapshotBtn.hidden = true;
+  historyBtn.hidden = true;
 }
 
 editToggleBtn.addEventListener('click', function () {
@@ -928,6 +1062,245 @@ function saveMember() {
 }
 
 memberSaveBtn.addEventListener('click', saveMember);
+</script>
+
+<script>
+/* ============================================================
+   存檔快照 ＋ 版本歷史 ＋ 還原（里程碑 3）
+   還原鈕是否出現只看前端 isAdmin（密碼 7／張瓊安）——這只是 UX 層的第一道門檻，
+   真正授權一律由後端 doPost action=restore 用密碼反查身份再驗一次（見 gas/Code.gs handleRestoreAction_），
+   不論這裡的旗標被怎麼繞過，非管理員密碼一律被後端拒絕。
+   ============================================================ */
+const snapshotBtn = document.getElementById('snapshotBtn');
+const historyBtn = document.getElementById('historyBtn');
+
+const snapshotModalOverlay = document.getElementById('snapshotModalOverlay');
+const snapshotNameInput = document.getElementById('snapshotNameInput');
+const snapshotError = document.getElementById('snapshotError');
+const snapshotCancelBtn = document.getElementById('snapshotCancelBtn');
+const snapshotSaveBtn = document.getElementById('snapshotSaveBtn');
+
+const historyModalOverlay = document.getElementById('historyModalOverlay');
+const historyHint = document.getElementById('historyHint');
+const historyList = document.getElementById('historyList');
+const historyCloseBtn = document.getElementById('historyCloseBtn');
+
+const restoreConfirmOverlay = document.getElementById('restoreConfirmOverlay');
+const restoreConfirmText = document.getElementById('restoreConfirmText');
+const restoreError = document.getElementById('restoreError');
+const restoreCancelBtn = document.getElementById('restoreCancelBtn');
+const restoreConfirmBtn = document.getElementById('restoreConfirmBtn');
+
+let LATEST_SNAPSHOTS = [];
+let pendingRestoreTimestamp = null;
+
+function defaultSnapshotName() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  return y + '-' + m + ' 月版';
+}
+
+function formatTaipeiTime(iso) {
+  try {
+    return new Date(iso).toLocaleString('zh-TW', {
+      timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  } catch (err) {
+    return iso;
+  }
+}
+
+/* ---------- 存檔目前版本 ---------- */
+
+function openSnapshotModal() {
+  snapshotNameInput.value = defaultSnapshotName();
+  snapshotError.textContent = '';
+  snapshotModalOverlay.hidden = false;
+  snapshotNameInput.focus();
+  snapshotNameInput.select();
+}
+
+function closeSnapshotModal() {
+  snapshotModalOverlay.hidden = true;
+}
+
+function saveSnapshot() {
+  const name = snapshotNameInput.value.trim();
+  if (!name) {
+    snapshotError.textContent = '請輸入快照名稱';
+    return;
+  }
+  snapshotError.textContent = '';
+  snapshotSaveBtn.disabled = true;
+  snapshotSaveBtn.textContent = '存檔中…';
+
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: savedEditCode, action: 'snapshot', name: name }) })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || !data.ok) {
+        snapshotError.textContent = (data && data.error) || '存檔失敗，請重試';
+        return;
+      }
+      closeSnapshotModal();
+      showToast('📸 已存檔版本〈' + data.name + '〉');
+    })
+    .catch(function (err) {
+      snapshotError.textContent = '網路錯誤，請重試：' + err.message;
+    })
+    .finally(function () {
+      snapshotSaveBtn.disabled = false;
+      snapshotSaveBtn.textContent = '存檔';
+    });
+}
+
+snapshotBtn.addEventListener('click', function () { if (editMode) openSnapshotModal(); });
+snapshotCancelBtn.addEventListener('click', closeSnapshotModal);
+snapshotSaveBtn.addEventListener('click', saveSnapshot);
+snapshotNameInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') saveSnapshot();
+});
+
+/* ---------- 版本紀錄面板 ---------- */
+
+function chainSummaryHtml(counts) {
+  return CHAIN_ORDER.map(function (c) {
+    return '<span class="chain-count-pill">' + c + ' ' + (counts[c] || 0) + '</span>';
+  }).join('') + '<span class="chain-count-pill chain-count-pill-unassigned">未分組 ' + (counts.unassigned || 0) + '</span>';
+}
+
+function memberNameById(id) {
+  const m = (LATEST_DATA.members || []).find(function (x) { return String(x.id) === String(id); });
+  return m ? m.name : ('#' + id + '（找不到姓名，可能已異動）');
+}
+
+function previewHtml(members) {
+  const byChain = {};
+  CHAIN_ORDER.forEach(function (c) { byChain[c] = []; });
+  (members || []).forEach(function (m) {
+    (m.chains || []).forEach(function (c) { if (byChain[c]) byChain[c].push(memberNameById(m.id)); });
+  });
+  return '<div class="history-preview">' + CHAIN_ORDER.map(function (c) {
+    return '<div class="history-preview-col"><strong>' + c + '</strong>：' + (byChain[c].join('、') || '（無）') + '</div>';
+  }).join('') + '</div>';
+}
+
+function historyRowHtml(snap, idx) {
+  const restoreBtnHtml = isAdmin
+    ? '<button type="button" class="modal-btn modal-btn-primary history-restore-btn" data-idx="' + idx + '">還原到這版</button>'
+    : '<span class="history-restore-locked">只有管理員能還原</span>';
+  return (
+    '<div class="history-row">' +
+      '<div class="history-row-head">' +
+        '<div><strong>' + escapeHtml(snap.name) + '</strong></div>' +
+        '<div class="history-meta">' + formatTaipeiTime(snap.timestamp) + '・操作者：' + escapeHtml(snap.operator) + '</div>' +
+      '</div>' +
+      '<div class="chain-summary">' + chainSummaryHtml(snap.counts) + '</div>' +
+      '<button type="button" class="history-preview-toggle" data-idx="' + idx + '">預覽名單</button>' +
+      '<div class="history-preview-wrap" id="historyPreview' + idx + '" hidden></div>' +
+      '<div class="history-row-actions">' + restoreBtnHtml + '</div>' +
+    '</div>'
+  );
+}
+
+function openHistoryModal() {
+  historyModalOverlay.hidden = false;
+  historyHint.textContent = '載入中…';
+  historyList.innerHTML = '';
+
+  fetch(GAS_URL + '?action=listSnapshots&t=' + Date.now(), { method: 'GET', cache: 'no-store' })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || !data.ok) throw new Error('bad response');
+      LATEST_SNAPSHOTS = data.snapshots || [];
+      if (!LATEST_SNAPSHOTS.length) {
+        historyHint.textContent = '目前還沒有任何存檔版本';
+        return;
+      }
+      historyHint.textContent = '共 ' + LATEST_SNAPSHOTS.length + ' 筆版本（新到舊）';
+      historyList.innerHTML = LATEST_SNAPSHOTS.map(function (s, i) { return historyRowHtml(s, i); }).join('');
+    })
+    .catch(function (err) {
+      historyHint.textContent = '⚠️ 載入版本紀錄失敗，請重試：' + err.message;
+    });
+}
+
+function closeHistoryModal() {
+  historyModalOverlay.hidden = true;
+}
+
+historyBtn.addEventListener('click', function () { if (editMode) openHistoryModal(); });
+historyCloseBtn.addEventListener('click', closeHistoryModal);
+
+historyList.addEventListener('click', function (e) {
+  const previewToggleBtn = e.target.closest('.history-preview-toggle');
+  if (previewToggleBtn) {
+    const idx = previewToggleBtn.getAttribute('data-idx');
+    const wrap = document.getElementById('historyPreview' + idx);
+    if (wrap.hidden) {
+      wrap.innerHTML = previewHtml(LATEST_SNAPSHOTS[idx].members);
+      wrap.hidden = false;
+      previewToggleBtn.textContent = '收合名單';
+    } else {
+      wrap.hidden = true;
+      previewToggleBtn.textContent = '預覽名單';
+    }
+    return;
+  }
+  const restoreBtn = e.target.closest('.history-restore-btn');
+  if (restoreBtn) {
+    const idx = restoreBtn.getAttribute('data-idx');
+    const snap = LATEST_SNAPSHOTS[idx];
+    openRestoreConfirm(snap.timestamp, snap.name);
+  }
+});
+
+/* ---------- 還原二次確認 ---------- */
+
+function openRestoreConfirm(timestamp, name) {
+  pendingRestoreTimestamp = timestamp;
+  restoreConfirmText.textContent = '確定把分組還原到〈' + name + '〉？目前分組會被覆蓋（系統會先自動備份現況）';
+  restoreError.textContent = '';
+  restoreConfirmOverlay.hidden = false;
+}
+
+function closeRestoreConfirm() {
+  restoreConfirmOverlay.hidden = true;
+}
+
+function confirmRestore() {
+  if (!isAdmin) {
+    restoreError.textContent = '只有管理員能還原';
+    return;
+  }
+  restoreError.textContent = '';
+  restoreConfirmBtn.disabled = true;
+  restoreConfirmBtn.textContent = '還原中…';
+
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: savedEditCode, action: 'restore', timestamp: pendingRestoreTimestamp }) })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || !data.ok) {
+        restoreError.textContent = (data && data.error) || '還原失敗，請重試';
+        return;
+      }
+      closeRestoreConfirm();
+      closeHistoryModal();
+      showToast('⚠️ 已還原到〈' + data.snapshotName + '〉版本（已自動備份現況）');
+      return loadFromGas({ retries: 2, retryDelayMs: 1500 });
+    })
+    .catch(function (err) {
+      restoreError.textContent = '網路錯誤，請重試：' + err.message;
+    })
+    .finally(function () {
+      restoreConfirmBtn.disabled = false;
+      restoreConfirmBtn.textContent = '確定還原';
+    });
+}
+
+restoreCancelBtn.addEventListener('click', closeRestoreConfirm);
+restoreConfirmBtn.addEventListener('click', confirmRestore);
 </script>
 
 </body>
