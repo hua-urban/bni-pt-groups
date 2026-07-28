@@ -63,7 +63,6 @@ window.PT_SEED = {
     { id: 48, name: '林晏伃', profession: '都更長照建築師-台北市', chains: ['C'] },
     { id: 49, name: '李瑞雲Grace', profession: '置產投資客-台北市松山區', chains: ['A', 'B'] },
     { id: 50, name: '謝夢瑰Dian', profession: '高資產房地產顧問-台北', chains: ['E'] },
-    { id: 51, name: '楊淑媛', profession: '地主召集人-台北市士林區', chains: ['A', 'C'] },
     { id: 52, name: '張怡蘋April', profession: '工程顧問', chains: ['A'] },
     { id: 53, name: '張耕豪', profession: '大板磚工程-連工帶料', chains: ['B', 'D'] },
     { id: 54, name: '陳品攸', profession: '商業法律顧問', chains: ['C'] },
