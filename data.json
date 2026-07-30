@@ -1,0 +1,675 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "name": "王常殷Hubert",
+      "profession": "都更危老建設-新竹地區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 2,
+      "name": "藍堂嘉",
+      "profession": "包租代管平台負責人",
+      "chains": [
+        "B",
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 3,
+      "name": "劉羿岑",
+      "profession": "節能減碳顧問",
+      "chains": [
+        "D",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 4,
+      "name": "陳向柔Naomi",
+      "profession": "商業空間室內設計-新竹以北",
+      "chains": [
+        "C",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 5,
+      "name": "劉恩秀Joan",
+      "profession": "人力派遣",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 6,
+      "name": "周以仁",
+      "profession": "仲介經紀人-台北市大安區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 7,
+      "name": "張瓊安",
+      "profession": "仲介經紀人-新北市三重、蘆洲、新莊",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 8,
+      "name": "高翊書Eason",
+      "profession": "都更危老建設-台北市信義區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 9,
+      "name": "王寶佳Renee",
+      "profession": "置產投資客-台北市萬華區",
+      "chains": [
+        "A",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 10,
+      "name": "王春雄Jayson",
+      "profession": "理財規劃顧問-雙北",
+      "chains": [
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 11,
+      "name": "陳靖薇",
+      "profession": "包租代管-台北市內湖、松山區",
+      "chains": [
+        "B",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-11T05:48:36.392Z",
+      "lastEditor": "11 陳靖薇"
+    },
+    {
+      "id": 12,
+      "name": "蘇瓜雅",
+      "profession": "財務管理-不動產聯合開發-台北市",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 13,
+      "name": "施宜妏",
+      "profession": "金融業-法務顧問",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-25T10:58:28.529Z",
+      "lastEditor": "7 張瓊安"
+    },
+    {
+      "id": 14,
+      "name": "莊大永",
+      "profession": "地主召集人-台東市-自主更新",
+      "chains": [
+        "A",
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 15,
+      "name": "莊涵勝",
+      "profession": "仲介經紀人-台北市信義區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 16,
+      "name": "黃冠霖",
+      "profession": "證券交易系統-軟體工程師",
+      "chains": [
+        "A",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 17,
+      "name": "諸紀平",
+      "profession": "住宅室內設計裝修-台北市",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 18,
+      "name": "陳秒螢Emma",
+      "profession": "房屋貸款-新竹以北",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 19,
+      "name": "李艾莉Aili",
+      "profession": "工業蒸氣熱能系統",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 20,
+      "name": "莊慧劍",
+      "profession": "置產投資客-台北市信義、南港區",
+      "chains": [
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-11T05:45:38.435Z",
+      "lastEditor": "11 陳靖薇"
+    },
+    {
+      "id": 21,
+      "name": "吳翊辰",
+      "profession": "地政士-中彰投雲嘉南",
+      "chains": [
+        "A",
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 22,
+      "name": "黃郁婷",
+      "profession": "金融業-財務",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 23,
+      "name": "林必涵",
+      "profession": "農地廠房收租-台中",
+      "chains": [
+        "A",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 24,
+      "name": "蔡明璋",
+      "profession": "合法隔套置產投資-台北市大安、中正區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 25,
+      "name": "王佳筠",
+      "profession": "建案代銷專案管理-北部",
+      "chains": [
+        "B",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-29T12:25:52.905Z",
+      "lastEditor": "7 張瓊安"
+    },
+    {
+      "id": 26,
+      "name": "楊之慧",
+      "profession": "金融業-後台交割",
+      "chains": [
+        "A",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 27,
+      "name": "陳黎玲Jossie",
+      "profession": "會展空間裝修設計-新竹以北",
+      "chains": [
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 28,
+      "name": "林佩君",
+      "profession": "仲介經紀人-台北市中山區",
+      "chains": [
+        "A",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 29,
+      "name": "林媜媁Wei",
+      "profession": "資通訊業-財務分析師",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 30,
+      "name": "李慧如Eva",
+      "profession": "再造回收過濾鐵網、太空包",
+      "chains": [
+        "C",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 31,
+      "name": "凃馨文Wen",
+      "profession": "家電B2B",
+      "chains": [
+        "A",
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 32,
+      "name": "柳慧燕",
+      "profession": "危老都更推動建築師-台北市",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 33,
+      "name": "宋馨巧",
+      "profession": "韓語線上家教",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 34,
+      "name": "張瑜晏",
+      "profession": "不動產估價與鑑定-雙北、桃園",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 35,
+      "name": "陳昭男",
+      "profession": "都更土地開發-台北市",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 36,
+      "name": "包育翎",
+      "profession": "地主召集人-高雄市鳳山區",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 37,
+      "name": "蔡岱達",
+      "profession": "磁磚經銷商-台中以北",
+      "chains": [
+        "A",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 38,
+      "name": "蔡淯思Mina",
+      "profession": "ERP專案管理",
+      "chains": [
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 39,
+      "name": "詹媛婷",
+      "profession": "房貸減壓-台北市",
+      "chains": [
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 40,
+      "name": "王雅慧Peggy",
+      "profession": "置產投資客-台北市中山、大同區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 41,
+      "name": "何俊彥",
+      "profession": "老屋翻新包租代管-台北市",
+      "chains": [
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-27T13:17:11.482Z",
+      "lastEditor": "10 王春雄Jayson"
+    },
+    {
+      "id": 42,
+      "name": "周育慈Anna",
+      "profession": "包租代管-台北市大安區",
+      "chains": [
+        "B",
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 43,
+      "name": "洪嘉璿左左",
+      "profession": "MMT天賦諮詢師",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 44,
+      "name": "鍾智媛Fiona",
+      "profession": "商務中心-台北市大安、中山區",
+      "chains": [
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-25T14:49:24.447Z",
+      "lastEditor": "11 陳靖薇"
+    },
+    {
+      "id": 45,
+      "name": "黃建嘉",
+      "profession": "仲介經紀人-台北市大同區",
+      "chains": [
+        "A"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-29T12:25:38.782Z",
+      "lastEditor": "7 張瓊安"
+    },
+    {
+      "id": 46,
+      "name": "林中群",
+      "profession": "鋼結構防蝕工程",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 47,
+      "name": "蔡馨葳Mandy",
+      "profession": "人壽財務規劃-桃園",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 48,
+      "name": "林晏伃",
+      "profession": "都更長照建築師-台北市",
+      "chains": [
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 49,
+      "name": "李瑞雲Grace",
+      "profession": "置產投資客-台北市松山區",
+      "chains": [
+        "A",
+        "B"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 50,
+      "name": "謝夢瑰Dian",
+      "profession": "高資產房地產顧問-台北",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 52,
+      "name": "張怡蘋April",
+      "profession": "工程顧問",
+      "chains": [
+        "A",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 53,
+      "name": "張耕豪",
+      "profession": "大板磚工程-連工帶料",
+      "chains": [
+        "B",
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 54,
+      "name": "陳品攸",
+      "profession": "商業法律顧問",
+      "chains": [
+        "C"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 55,
+      "name": "吳念鎧",
+      "profession": "仲介經紀人-大新竹區",
+      "chains": [
+        "E"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    },
+    {
+      "id": 56,
+      "name": "沈瑞婷",
+      "profession": "智慧物流導入顧問",
+      "chains": [
+        "D"
+      ],
+      "note": "",
+      "updatedAt": "2026-07-29T12:59:16.093Z",
+      "lastEditor": "7 張瓊安"
+    },
+    {
+      "id": 57,
+      "name": "古育瑋",
+      "profession": "廠房建築師與營造-桃竹苗",
+      "chains": [],
+      "note": "",
+      "updatedAt": "2026-07-10T02:17:05.843Z",
+      "lastEditor": "系統初始化匯入"
+    }
+  ],
+  "groups": [
+    {
+      "code": "A",
+      "name": "地主改建整合鏈",
+      "leader": "柳慧燕",
+      "schedule": "每月第 1、3 個週四・線上 20:30–22:00"
+    },
+    {
+      "code": "B",
+      "name": "老屋現金流升級鏈",
+      "leader": "陳靖薇",
+      "schedule": "每月第 2、4 個週五・線上 21:00–22:00"
+    },
+    {
+      "code": "C",
+      "name": "高齡安居x資產傳承產業鏈",
+      "leader": "王春雄Jayson",
+      "schedule": "每月第 2、4 個週四・線上 21:00–22:00"
+    },
+    {
+      "code": "D",
+      "name": "商用不動產升級鏈",
+      "leader": "陳向柔Naomi",
+      "schedule": "每月第 2、4 個週二・線上 21:00–22:00／實體 19:00–21:00"
+    },
+    {
+      "code": "E",
+      "name": "房產客戶成長鏈",
+      "leader": "張瓊安",
+      "schedule": "每月第 1、3 個週二・線上 20:30–21:30"
+    }
+  ]
+}

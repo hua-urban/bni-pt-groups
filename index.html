@@ -659,7 +659,7 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="data.js?v=20260710"></script>
+<script src="data.js?v=20260730"></script>
 <script>
 /* ============================================================
    GAS 後端網址（唯讀 doGet，正式部署已上線）
@@ -775,12 +775,8 @@ function applySearch() {
 
 searchInput.addEventListener('input', applySearch);
 
-// 冷啟先渲染內嵌 seed，避免 GAS 冷啟 2~4 秒白屏
-render(window.PT_SEED || { groups: [], members: [] });
-
 // 讀取 GAS 最新資料並覆蓋畫面；失敗則保留現有畫面（降級不假裝成功）。
-// 里程碑 1：只在冷啟呼叫一次。里程碑 2：doPost 存檔成功後也會呼叫這支重新拉最新分組。
-// 里程碑 2.1：opts.retries 給存檔後刷新用——doPost 剛寫完緊接 doGet 偶發失敗/太快會誤閃「連不到後端」
+// opts.retries 給存檔後刷新用——doPost 剛寫完緊接 doGet 偶發失敗/太快會誤閃「連不到後端」
 // 嚇組長以為沒存到（資料其實已寫對），先靜默重試幾次再顯示降級文案。
 function loadFromGas(opts) {
   opts = opts || {};
@@ -806,7 +802,50 @@ function loadFromGas(opts) {
     });
 }
 
-loadFromGas();
+// 判斷 data.json / GAS 回應是不是一份「可以拿來畫看板」的合法資料。
+function isValidRosterPayload(data) {
+  return !!data && Array.isArray(data.members) && data.members.length > 0 && Array.isArray(data.groups);
+}
+
+// 只取 groups/members 內容序列化，用來判斷兩份資料「內容是否真的不同」，
+// 忽略 GAS 回應多出的 ok/generatedAt 等每次必變欄位。
+function rosterSignature(data) {
+  return JSON.stringify({ groups: (data && data.groups) || [], members: (data && data.members) || [] });
+}
+
+// 背景靜默核對 GAS：不顯示任何載入文字，資料跟畫面上的一樣就什麼都不做，
+// 不一樣才重繪——避免 data.json 快照跟 GAS 現況間的 10 分鐘空窗被使用者看到閃爍。
+function silentSyncFromGas() {
+  fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!isValidRosterPayload(data)) return;
+      if (rosterSignature(data) !== rosterSignature(LATEST_DATA)) render(data);
+    })
+    .catch(function (err) {
+      console.error('背景核對 GAS 失敗（不影響目前畫面）', err);
+    });
+}
+
+// 冷啟：優先讀 data.json（GitHub Actions 每 10 分鐘同步的靜態快照，讀取幾乎瞬間），
+// 成功就立刻畫面上桌，背景再靜默核對一次 GAS 現況；
+// data.json 讀失敗或內容不合法（尚未產生過快照／格式跑掉）才退回舊流程：
+// 內嵌 PT_SEED 先畫，再走現有 loadFromGas() 可見降級文案。
+fetch('data.json?t=' + Date.now(), { cache: 'no-store' })
+  .then(function (res) {
+    if (!res.ok) throw new Error('data.json HTTP ' + res.status);
+    return res.json();
+  })
+  .then(function (data) {
+    if (!isValidRosterPayload(data)) throw new Error('data.json 內容不合法');
+    render(data);
+    silentSyncFromGas();
+  })
+  .catch(function (err) {
+    console.error('讀取 data.json 失敗，退回內建 seed + GAS 直連', err);
+    render(window.PT_SEED || { groups: [], members: [] });
+    loadFromGas();
+  });
 </script>
 
 <script>
@@ -880,7 +919,12 @@ function submitCode() {
     savedEditCode = normalized; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
     isAdmin = normalized === '7'; // 只決定「還原鈕要不要出現」；真正授權一律由後端 doPost action=restore 再驗一次
     closeCodeModal();
-    enterEditMode();
+    // 進編輯模式前先拉一次 GAS 最新資料當編輯基準，避免兩位組長前後台資料不同步、
+    // 改到一半互相覆蓋。這裡可以顯示等待提示，組長本來就預期存檔要等。
+    loadStatusEl.textContent = '正在同步最新分組資料…';
+    loadFromGas()
+      .catch(function () { /* 失敗仍讓組長進得去，沿用目前畫面資料；loadFromGas 內部已設置降級文案 */ })
+      .then(function () { enterEditMode(); });
   } else {
     codeError.textContent = '組長密碼不正確，請再試一次';
   }

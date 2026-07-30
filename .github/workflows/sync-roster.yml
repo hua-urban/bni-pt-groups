@@ -1,0 +1,46 @@
+name: 同步分組名單快照
+
+# 目的：把 GAS 唯讀資料每 10 分鐘同步成 repo 內的 data.json 靜態快照，
+# 讓看板前端改成優先讀這份快照（近乎瞬間），不必每次開頁都等 GAS 2~3 秒。
+# 只用 Actions 內建 GITHUB_TOKEN，刻意不引入任何外部 PAT（安全考量）。
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-roster
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 簽出 repo
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 抓取 GAS 最新名單並驗證後寫入 data.json
+        env:
+          GAS_URL: https://script.google.com/macros/s/AKfycbxDLC_mhRaLhlycnLWhRmdTdI9HU6BHQEXhdANMZL0aF0yTTrMzvxHi0u-YyHMJCP9Jzg/exec
+        run: node .github/scripts/sync-roster.js
+
+      - name: 只有內容真的變更才 commit + push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data.json; then
+            echo "名單內容沒有變化，略過 commit"
+          else
+            git add data.json
+            git commit -m "auto: 同步分組名單快照"
+            git push
+          fi
