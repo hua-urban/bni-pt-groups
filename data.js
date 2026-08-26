@@ -10,7 +10,7 @@ window.PT_SEED = {
     { code: 'B', name: '老屋現金流升級鏈', leader: '陳靖薇', schedule: '每月第 2、4 個週五・線上 21:00–22:00' },
     { code: 'C', name: '高齡安居x資產傳承產業鏈', leader: '王春雄Jayson', schedule: '每月第 2、4 個週四・線上 21:00–22:00' },
     { code: 'D', name: '商用不動產升級鏈', leader: '陳向柔Naomi', schedule: '每月第 2、4 個週二・線上 21:00–22:00／實體 19:00–21:00' },
-    { code: 'E', name: '房產客戶成長鏈', leader: '張瓊安', schedule: '每月第 1、3 個週二・線上 20:30–21:30' }
+    { code: 'E', name: '房產客戶成長鏈', leader: '洪嘉璿左左', schedule: '每月第 1、3 個週二・線上 20:30–21:30' }
   ],
   members: [
     { id: 1, name: '王常殷Hubert', profession: '都更危老建設-新竹地區', chains: ['A'] },
@@ -32,7 +32,6 @@ window.PT_SEED = {
     { id: 17, name: '諸紀平', profession: '住宅室內設計裝修-台北市', chains: ['A'] },
     { id: 18, name: '陳秒螢Emma', profession: '房屋貸款-新竹以北', chains: ['A', 'B'] },
     { id: 19, name: '李艾莉Aili', profession: '工業蒸氣熱能系統', chains: ['A'] },
-    { id: 20, name: '莊慧劍', profession: '置產投資客-台北市信義、南港區', chains: ['A'] },
     { id: 21, name: '吳翊辰', profession: '地政士-中彰投雲嘉南', chains: ['A', 'C'] },
     { id: 22, name: '黃郁婷', profession: '金融業-財務', chains: ['A', 'B'] },
     { id: 23, name: '林必涵', profession: '農地廠房收租-台中', chains: ['A', 'E'] },
