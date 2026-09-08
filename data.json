@@ -495,15 +495,6 @@
       "lastEditor": "11 陳靖薇"
     },
     {
-      "id": 45,
-      "name": "黃建嘉",
-      "profession": "仲介經紀人-台北市大同區",
-      "chains": [],
-      "note": "",
-      "updatedAt": "2026-09-02T12:32:39.299Z",
-      "lastEditor": "7 張瓊安"
-    },
-    {
       "id": 46,
       "name": "林中群",
       "profession": "鋼結構防蝕工程",
@@ -599,12 +590,10 @@
       "id": 55,
       "name": "吳念鎧",
       "profession": "仲介經紀人-大新竹區",
-      "chains": [
-        "E"
-      ],
+      "chains": [],
       "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "updatedAt": "2026-09-08T03:10:50.686Z",
+      "lastEditor": "7 張瓊安"
     },
     {
       "id": 56,
@@ -621,10 +610,12 @@
       "id": 57,
       "name": "古育瑋",
       "profession": "廠房建築師與營造-桃竹苗",
-      "chains": [],
+      "chains": [
+        "D"
+      ],
       "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "updatedAt": "2026-09-08T03:10:35.407Z",
+      "lastEditor": "7 張瓊安"
     }
   ],
   "groups": [

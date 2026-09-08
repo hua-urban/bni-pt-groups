@@ -3,6 +3,7 @@
  * 用途：GAS 冷啟通常要 2~4 秒，先用這份資料渲染畫面避免白屏；
  *       GAS fetch 回來後由 index.html 靜默覆蓋（見 hydrate 邏輯）。
  * 內容與 gas/Code.gs 的 MEMBERS_INIT / GROUPS_INIT 同步，若後台資料改了記得回頭核對這份。
+ * 2026-09-08：045 黃建嘉退會（專業別「仲介經紀人-台北市大同區」已開放），名冊 55 → 54 人；編號不遞補。
  */
 window.PT_SEED = {
   groups: [
@@ -56,7 +57,6 @@ window.PT_SEED = {
     { id: 42, name: '周育慈Anna', profession: '包租代管-台北市大安區', chains: ['B', 'C'] },
     { id: 43, name: '洪嘉璿左左', profession: 'MMT天賦諮詢師', chains: ['E'] },
     { id: 44, name: '鍾智媛Fiona', profession: '商務中心-台北市大安、中山區', chains: ['B', 'D'] },
-    { id: 45, name: '黃建嘉', profession: '仲介經紀人-台北市大同區', chains: [] },
     { id: 46, name: '林中群', profession: '鋼結構防蝕工程', chains: ['A', 'B'] },
     { id: 47, name: '蔡馨葳Mandy', profession: '人壽財務規劃-桃園', chains: ['E'] },
     { id: 48, name: '林晏伃', profession: '都更長照建築師-台北市', chains: ['C'] },
