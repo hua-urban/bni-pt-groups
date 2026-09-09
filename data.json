@@ -590,9 +590,11 @@
       "id": 55,
       "name": "吳念鎧",
       "profession": "仲介經紀人-大新竹區",
-      "chains": [],
+      "chains": [
+        "A"
+      ],
       "note": "",
-      "updatedAt": "2026-09-08T03:10:50.686Z",
+      "updatedAt": "2026-09-09T13:25:57.634Z",
       "lastEditor": "7 張瓊安"
     },
     {
