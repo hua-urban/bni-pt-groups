@@ -4,6 +4,7 @@
  *       GAS fetch 回來後由 index.html 靜默覆蓋（見 hydrate 邏輯）。
  * 內容與 gas/Code.gs 的 MEMBERS_INIT / GROUPS_INIT 同步，若後台資料改了記得回頭核對這份。
  * 2026-09-08：045 黃建嘉退會（專業別「仲介經紀人-台北市大同區」已開放），名冊 55 → 54 人；編號不遞補。
+ * 2026-09-11：058 王振伊（喬王）入會，房產財經教育，名冊 54 → 55 人；產業鏈待成長協調安排，暫留未分組。
  */
 window.PT_SEED = {
   groups: [
@@ -67,6 +68,7 @@ window.PT_SEED = {
     { id: 54, name: '陳品攸', profession: '商業法律顧問', chains: ['C'] },
     { id: 55, name: '吳念鎧', profession: '仲介經紀人-大新竹區', chains: ['E'] },
     { id: 56, name: '沈瑞婷', profession: '智慧物流導入顧問', chains: [] },
-    { id: 57, name: '古育瑋', profession: '廠房建築師與營造-桃竹苗', chains: [] }
+    { id: 57, name: '古育瑋', profession: '廠房建築師與營造-桃竹苗', chains: [] },
+    { id: 58, name: '王振伊（喬王）', profession: '房產財經教育', chains: [] }
   ]
 };
