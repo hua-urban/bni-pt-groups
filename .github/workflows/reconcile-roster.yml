@@ -1,0 +1,49 @@
+name: 名冊每日對帳
+
+# 目的：每天去打各系統的線上端點，比對「各自認為分會有幾個人」。
+#   同一份名冊在分會多套系統各存一份副本，漏改一處就會默默錯著——
+#   網站照常運作，只是少一個人，不會有任何徵兆。2026-09-08 就發現培訓系統
+#   線上停在 57 人、錯了將近兩個月；2026-09-11 新夥伴入會是會員自己來反映才知道。
+#
+# 正常完全安靜：六處一致就不發通知、不寫檔案。只有對不上才發一則到 LINE。
+# 通知走小幫手的 notify 端點，那邊有每日去重與每月額度上限。
+#
+# 規格：Joan/工作/BNI-華都更分會/系統通知改發LINE_規格書.md
+
+on:
+  schedule:
+    # 08:00 台北時間 = 00:00 UTC。挑早上是因為會員異動多半發生在週三例會前後，
+    # 早上發現還來得及在當天處理完。
+    #
+    # ⚠️ GitHub Actions 的排程本來就不保證準時（2026 年實測延遲可達 2-4 小時）。
+    #   這支不是時效性任務，晚一兩小時沒有影響，不要為此改成自架排程。
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: reconcile-roster
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 簽出 repo
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 對帳
+        env:
+          # 唯讀端點，本來就是公開的（前端 JS 裡看得到），不需要當祕密管理。
+          PT_GAS_URL: https://script.google.com/macros/s/AKfycbxDLC_mhRaLhlycnLWhRmdTdI9HU6BHQEXhdANMZL0aF0yTTrMzvxHi0u-YyHMJCP9Jzg/exec
+          TRAINING_URL: https://script.google.com/macros/s/AKfycbwH2PRrkEtuAsr0SPxu8DzA-xlBhjhMN3rYaaz2oNvC5nYpfuvf64hscHfwC6k1P9QuPg/exec
+          PORTAL_URL: https://hua-urban.github.io/
+          ETEAM_URL: https://hua-urban.github.io/e-team-grid/
+          # 這兩個要當祕密：拿到就能叫小幫手發訊息給資訊長。
+          NOTIFY_URL: ${{ secrets.NOTIFY_URL }}
+          NOTIFY_TOKEN: ${{ secrets.NOTIFY_TOKEN }}
+        run: node .github/scripts/reconcile-roster.js
