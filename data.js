@@ -8,9 +8,9 @@
  */
 window.PT_SEED = {
   groups: [
-    { code: 'A', name: '地主改建整合鏈', leader: '柳慧燕', schedule: '每月第 1、3 個週四・線上 20:30–22:00' },
+    { code: 'A', name: '地主改建整合鏈', leader: '柳慧燕', schedule: '每月第 1、3 個週四・線上 21:00–22:00' },
     { code: 'B', name: '老屋現金流升級鏈', leader: '陳靖薇', schedule: '每月第 2、4 個週五・線上 21:00–22:00' },
-    { code: 'C', name: '高齡安居x資產傳承產業鏈', leader: '王春雄Jayson', schedule: '每月第 2、4 個週四・線上 21:00–22:00' },
+    { code: 'C', name: '高齡安居x資產傳承產業鏈', leader: '王春雄Jayson', schedule: '每月第 2、4 個週一・線上 21:00–22:00' },
     { code: 'D', name: '商用不動產升級鏈', leader: '陳向柔Naomi', schedule: '每月第 2、4 個週二・線上 21:00–22:00／實體 19:00–21:00' },
     { code: 'E', name: '房產客戶成長鏈', leader: '洪嘉璿左左', schedule: '每月第 1、3 個週二・線上 20:30–21:30' }
   ],
