@@ -546,8 +546,18 @@
     color: var(--ink-dim);
   }
 </style>
+<style id="hua-home-navigation-style">
+.hua-home-navigation { box-sizing: border-box; display: block; position: relative; width: 100%; margin: 0; padding: 10px 16px; background: #fff; border-bottom: 1px solid #ded6d3; text-align: left; }
+.hua-home-navigation .hua-home-link { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: 9px 16px; border: 1px solid #a51c35; border-radius: 6px; background: #fff; color: #a51c35; font: 700 15px/1.5 -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif; text-decoration: none; }
+.hua-home-navigation .hua-home-link:hover { background: #a51c35; color: #fff; }
+.hua-home-navigation .hua-home-link:focus-visible { outline: 3px solid #1f4e79; outline-offset: 3px; }
+@media print { .hua-home-navigation { display: none; } }
+</style>
 </head>
 <body>
+<div class="hua-home-navigation" role="navigation" aria-label="華都更網站導覽">
+  <a class="hua-home-link" href="https://hua-urban.github.io/">← 回華都更首頁</a>
+</div>
 
 <header>
   <div class="eyebrow">BNI Hua Urban+ Renewal Chapter</div>
