@@ -622,10 +622,12 @@
       "id": 58,
       "name": "王振伊（喬王）",
       "profession": "房產財經教育",
-      "chains": [],
+      "chains": [
+        "B"
+      ],
       "note": "",
-      "updatedAt": "2026-09-11T03:47:04.737Z",
-      "lastEditor": "7 張瓊安"
+      "updatedAt": "2026-10-08T08:05:40.968Z",
+      "lastEditor": "11 陳靖薇"
     }
   ],
   "groups": [
