@@ -117,13 +117,13 @@ async function main() {
   // 基準本身抓不到就不比了——拿一個不確定的數字去說別人錯，只會製造假警報。
   if (!baseline) {
     await notify(
-      '⚠️ 名冊對帳沒跑完\n\n' +
-      `基準（${BASELINE}）抓不到資料，今天無法比對。\n` +
-      '這通常是 Google 服務暫時性的問題，明天會自動再試一次。\n' +
-      '連續幾天都這樣就要去看那支後端還在不在。',
+      '⚠️ 名冊對帳未完成\n\n' +
+      `基準（${BASELINE}）連續 ${MAX_ATTEMPTS} 次請求失敗，今天無法核對其餘名冊副本。\n` +
+      '本次未使用快取資料代替最新回應。請查看本次工作記錄及 PowerTeam 服務狀態。',
       'roster-baseline-down'
     );
-    process.exit(0);
+    process.exitCode = 1;
+    return;
   }
 
   // E 組九宮格列的是「非現役 E 組者」，人數天生比全分會少，不能直接比數字。
@@ -182,11 +182,13 @@ async function main() {
   lines.push('完整的異動檢查表在名冊正本筆記裡（會員異動要改哪幾處）。');
 
   await notify(lines.join('\n'), 'roster-mismatch');
-  await recordBeat(`名冊對帳發現 ${mismatches.length} 處落差`);
+  const summary = errors.length > 0
+    ? `名冊對帳未完成，${errors.length} 處無法讀取`
+    : `名冊對帳發現 ${mismatches.length} 處落差`;
+  await recordBeat(summary);
 
-  // 刻意 exit 0：對帳「發現問題」是它正常運作的結果，不是這支程式壞了。
-  // 用非零會讓 Actions 一片紅，真正的故障反而被淹沒（見 vault 踩坑速查）。
-  process.exit(0);
+  // 名冊落差是成功完成的檢查；端點取不到資料則代表本次未完成核對。
+  if (errors.length > 0) process.exitCode = 1;
 }
 
 // 基準有、對方沒有的人。兩邊命名格式不完全一致（有人帶英文別名、有人帶括號），
