@@ -642,7 +642,7 @@
   </div>
 </div>
 
-<!-- 版本紀錄面板（里程碑 3）：列出所有快照，還原鈕僅管理員（密碼 7／張瓊安）看得到 -->
+<!-- 版本紀錄面板（里程碑 3）：列出所有快照，還原鈕僅管理員看得到 -->
 <div class="modal-overlay" id="historyModalOverlay" hidden>
   <div class="modal-box modal-box-wide">
     <h3>🕓 版本紀錄</h3>
@@ -880,7 +880,7 @@ function normalizeLeaderCode(raw) {
 
 let editMode = false;
 let savedEditCode = '';
-let isAdmin = false; // 密碼 7／張瓊安才 true；只決定「還原鈕要不要出現」，後端 doPost action=restore 仍會再驗一次（里程碑 3）
+let isAdmin = false; // 由後端 whoami 回報；只決定「還原鈕要不要出現」，後端 doPost action=restore 仍會再驗一次（里程碑 3）
 let editingMemberId = null; // 卡片點擊進來的編輯：目前這位的 id；新增組員流程則用 rosterSelect 決定
 
 const editToggleBtn = document.getElementById('editToggleBtn');
@@ -928,21 +928,47 @@ function closeCodeModal() {
   codeModalOverlay.hidden = true;
 }
 
+function startEditSession(code, admin) {
+  savedEditCode = code; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
+  isAdmin = admin; // 只決定「還原鈕要不要出現」；真正授權一律由後端 doPost 再驗一次
+  closeCodeModal();
+  // 進編輯模式前先拉一次 GAS 最新資料當編輯基準，避免兩位組長前後台資料不同步、
+  // 改到一半互相覆蓋。這裡可以顯示等待提示，組長本來就預期存檔要等。
+  loadStatusEl.textContent = '正在同步最新分組資料…';
+  loadFromGas()
+    .catch(function () { /* 失敗仍讓組長進得去，沿用目前畫面資料；loadFromGas 內部已設置降級文案 */ })
+    .then(function () { enterEditMode(); });
+}
+
 function submitCode() {
   const normalized = normalizeLeaderCode(codeInput.value);
   if (LEADER_CODES.indexOf(normalized) !== -1) {
-    savedEditCode = normalized; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
-    isAdmin = normalized === '7'; // 只決定「還原鈕要不要出現」；真正授權一律由後端 doPost action=restore 再驗一次
-    closeCodeModal();
-    // 進編輯模式前先拉一次 GAS 最新資料當編輯基準，避免兩位組長前後台資料不同步、
-    // 改到一半互相覆蓋。這裡可以顯示等待提示，組長本來就預期存檔要等。
-    loadStatusEl.textContent = '正在同步最新分組資料…';
-    loadFromGas()
-      .catch(function () { /* 失敗仍讓組長進得去，沿用目前畫面資料；loadFromGas 內部已設置降級文案 */ })
-      .then(function () { enterEditMode(); });
-  } else {
-    codeError.textContent = '組長密碼不正確，請再試一次';
+    startEditSession(normalized, false);
+    return;
   }
+  // 不在組長名單 → 可能是管理員密碼：前端不存任何管理員資訊，交給後端 whoami 判斷
+  const raw = String(codeInput.value || '').trim();
+  if (!raw) {
+    codeError.textContent = '組長密碼不正確，請再試一次';
+    return;
+  }
+  codeError.textContent = '';
+  codeSubmitBtn.disabled = true;
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: raw, action: 'whoami' }) })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (data && data.ok) {
+        startEditSession(raw, !!data.isAdmin);
+      } else {
+        codeError.textContent = '組長密碼不正確，請再試一次';
+      }
+    })
+    .catch(function (err) {
+      codeError.textContent = '網路錯誤，請重試：' + err.message;
+    })
+    .finally(function () {
+      codeSubmitBtn.disabled = false;
+    });
 }
 
 function enterEditMode() {
@@ -1126,7 +1152,7 @@ memberSaveBtn.addEventListener('click', saveMember);
 <script>
 /* ============================================================
    存檔快照 ＋ 版本歷史 ＋ 還原（里程碑 3）
-   還原鈕是否出現只看前端 isAdmin（密碼 7／張瓊安）——這只是 UX 層的第一道門檻，
+   還原鈕是否出現只看前端 isAdmin（由後端 whoami 回報）——這只是 UX 層的第一道門檻，
    真正授權一律由後端 doPost action=restore 用密碼反查身份再驗一次（見 gas/Code.gs handleRestoreAction_），
    不論這裡的旗標被怎麼繞過，非管理員密碼一律被後端拒絕。
    ============================================================ */
