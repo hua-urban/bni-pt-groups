@@ -34,7 +34,7 @@ jobs:
       - name: 設定 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.23.4'
 
       - name: 對帳
         env:
