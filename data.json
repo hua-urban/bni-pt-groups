@@ -155,11 +155,12 @@
       "profession": "地主召集人-台東市-自主更新",
       "chains": [
         "A",
+        "B",
         "C"
       ],
       "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "updatedAt": "2026-10-29T23:31:20.816Z",
+      "lastEditor": "11 陳靖薇"
     },
     {
       "id": 15,
