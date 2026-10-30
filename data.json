@@ -296,24 +296,21 @@
       "id": 27,
       "name": "陳黎玲Jossie",
       "profession": "會展空間裝修設計-新竹以北",
-      "chains": [
-        "D"
-      ],
+      "chains": [],
       "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "updatedAt": "2026-10-30T12:25:25.463Z",
+      "lastEditor": "4 陳向柔Naomi"
     },
     {
       "id": 28,
       "name": "林佩君",
       "profession": "仲介經紀人-台北市中山區",
       "chains": [
-        "A",
-        "E"
+        "A"
       ],
       "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "updatedAt": "2026-10-30T12:18:16.557Z",
+      "lastEditor": "4 陳向柔Naomi"
     },
     {
       "id": 29,
