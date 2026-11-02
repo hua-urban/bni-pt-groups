@@ -451,10 +451,12 @@
       "id": 41,
       "name": "何俊彥",
       "profession": "老屋翻新包租代管-台北市",
-      "chains": [],
+      "chains": [
+        "A"
+      ],
       "note": "",
-      "updatedAt": "2026-10-11T13:31:41.770Z",
-      "lastEditor": "11 陳靖薇"
+      "updatedAt": "2026-11-02T08:18:41.764Z",
+      "lastEditor": "4 陳向柔Naomi"
     },
     {
       "id": 42,
