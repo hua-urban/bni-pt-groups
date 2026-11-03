@@ -798,7 +798,7 @@ function loadFromGas(opts) {
     .then(function (data) {
       if (!data || !data.ok) throw new Error('bad response');
       render(data);
-      loadStatusEl.textContent = Number.isSafeInteger(data.rosterVersion) ? '中央會員名冊 v' + data.rosterVersion + ' · ' + data.effectiveAsOf : '目前為原名冊，中央管理尚未啟用';
+      loadStatusEl.textContent = Number.isSafeInteger(data.rosterVersion) ? '會員名單已同步｜共 ' + data.members.length + ' 位會員｜名單確認日期：' + data.effectiveAsOf : '目前顯示備援名單，最新資料待確認';
       return data;
     })
     .catch(function (err) {
