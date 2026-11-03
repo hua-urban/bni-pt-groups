@@ -83,6 +83,9 @@ async function main() {
   // 讓後續 `git diff --quiet` 能準確反映「名單內容有沒有真的變」，
   // 避免每 10 分鐘都因時間戳不同而產生空轉 commit。
   const snapshot = { members: data.members, groups: data.groups };
+  if (Number.isSafeInteger(data.rosterVersion)) {
+    for (const key of ['schemaVersion','rosterVersion','effectiveAsOf','contentHash']) snapshot[key]=data[key];
+  }
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
   console.log('已寫入 data.json：members=' + data.members.length + ' groups=' + data.groups.length);

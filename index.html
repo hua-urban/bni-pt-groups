@@ -567,7 +567,7 @@
     <div id="searchHint"></div>
   </div>
   <div class="edit-bar">
-    <button type="button" id="editToggleBtn" class="edit-btn">🔓 組長編輯模式</button>
+    <button type="button" id="editToggleBtn" class="edit-btn">登入會員管理</button>
     <button type="button" id="addGuestBtn" class="edit-btn add-guest-btn" hidden>＋ 新增組員</button>
     <button type="button" id="snapshotBtn" class="edit-btn" hidden>📸 存檔目前版本</button>
     <button type="button" id="historyBtn" class="edit-btn" hidden>🕓 版本紀錄</button>
@@ -798,7 +798,7 @@ function loadFromGas(opts) {
     .then(function (data) {
       if (!data || !data.ok) throw new Error('bad response');
       render(data);
-      loadStatusEl.textContent = '';
+      loadStatusEl.textContent = Number.isSafeInteger(data.rosterVersion) ? '中央會員名冊 v' + data.rosterVersion + ' · ' + data.effectiveAsOf : '目前為原名冊，中央管理尚未啟用';
       return data;
     })
     .catch(function (err) {
@@ -837,25 +837,13 @@ function silentSyncFromGas() {
     });
 }
 
-// 冷啟：優先讀 data.json（GitHub Actions 每 10 分鐘同步的靜態快照，讀取幾乎瞬間），
-// 成功就立刻畫面上桌，背景再靜默核對一次 GAS 現況；
-// data.json 讀失敗或內容不合法（尚未產生過快照／格式跑掉）才退回舊流程：
-// 內嵌 PT_SEED 先畫，再走現有 loadFromGas() 可見降級文案。
-fetch('data.json?t=' + Date.now(), { cache: 'no-store' })
-  .then(function (res) {
-    if (!res.ok) throw new Error('data.json HTTP ' + res.status);
-    return res.json();
-  })
-  .then(function (data) {
-    if (!isValidRosterPayload(data)) throw new Error('data.json 內容不合法');
-    render(data);
-    silentSyncFromGas();
-  })
-  .catch(function (err) {
-    console.error('讀取 data.json 失敗，退回內建 seed + GAS 直連', err);
-    render(window.PT_SEED || { groups: [], members: [] });
-    loadFromGas();
-  });
+// Central API is authoritative. Static snapshots are read only after a failed live read.
+loadFromGas().catch(function () {
+  return fetch('data.json?t=' + Date.now(), {cache:'no-store'})
+    .then(function (res) { if(!res.ok)throw new Error('Snapshot unavailable');return res.json(); })
+    .then(function(data){if(!isValidRosterPayload(data))throw new Error('Invalid snapshot');render(data);loadStatusEl.textContent='目前顯示備援快照，最新名冊待確認';})
+    .catch(function(){render(window.PT_SEED || {groups:[],members:[]});loadStatusEl.textContent='目前顯示備援資料，最新名冊待確認';});
+});
 </script>
 
 <script>
@@ -1389,5 +1377,9 @@ restoreCancelBtn.addEventListener('click', closeRestoreConfirm);
 restoreConfirmBtn.addEventListener('click', confirmRestore);
 </script>
 
+<script>
+// Membership writes are authenticated by the central app; public member numbers no longer authorize changes.
+editToggleBtn.addEventListener('click',function(event){event.preventDefault();event.stopImmediatePropagation();window.location.assign('https://hua-urban.com/admin/members/');},true);
+</script>
 </body>
 </html>
