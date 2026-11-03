@@ -2,629 +2,926 @@
   "members": [
     {
       "id": 1,
+      "memberId": "ba9d674c-5c16-47b1-bebb-6ca221e6ecf9",
+      "memberNo": "001",
       "name": "王常殷Hubert",
       "profession": "都更危老建設-新竹地區",
+      "role": "副主席",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "王常殷Hubert",
+        "王常殷 Hubert",
+        "王常殷 Hubert Wang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 2,
+      "memberId": "7cbcd5d4-6088-4781-be84-d5ddb2c284b4",
+      "memberNo": "002",
       "name": "藍堂嘉",
       "profession": "包租代管平台負責人",
+      "role": "",
       "chains": [
         "B",
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "藍堂嘉",
+        "藍堂嘉 Albert LAN"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 3,
+      "memberId": "7ecb3c6a-d702-47f3-95bb-3c49f5dfcdb9",
+      "memberNo": "003",
       "name": "劉羿岑",
       "profession": "節能減碳顧問",
+      "role": "資訊組長",
       "chains": [
         "D",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "劉羿岑",
+        "劉羿岑 Yitsen Liu"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 4,
+      "memberId": "e261aae7-7bff-4067-81c9-f800212e5cb6",
+      "memberNo": "004",
       "name": "陳向柔Naomi",
       "profession": "商業空間室內設計-新竹以北",
+      "role": "成長協調",
       "chains": [
         "C",
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "陳向柔Naomi",
+        "陳向柔 Naomi",
+        "陳向柔Naomi Chen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 5,
+      "memberId": "48416067-4c27-425a-88c4-d5c6240086d6",
+      "memberNo": "005",
       "name": "劉恩秀Joan",
       "profession": "人力派遣",
+      "role": "",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "劉恩秀Joan",
+        "劉恩秀 Joan",
+        "劉恩秀 Liou en Siou"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 6,
+      "memberId": "b4020c9e-c558-4484-8635-b0fc532ca415",
+      "memberNo": "006",
       "name": "周以仁",
       "profession": "仲介經紀人-台北市大安區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "周以仁",
+        "周以仁 Chou Yi Jen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 7,
+      "memberId": "9a0c51ea-2863-424a-9256-5976317e2f2b",
+      "memberNo": "007",
       "name": "張瓊安",
       "profession": "仲介經紀人-新北市三重、蘆洲、新莊",
+      "role": "接待組長",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "張瓊安",
+        "張瓊安 Joanne"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 8,
+      "memberId": "67cd2178-2d94-4384-bc82-d34fc0f723ad",
+      "memberNo": "008",
       "name": "高翊書Eason",
       "profession": "都更危老建設-台北市信義區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "高翊書Eason",
+        "高翊書 Eason",
+        "高翊書 Eason Kao"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 9,
+      "memberId": "af51e6f8-34d8-4d2f-a8f5-c3a5f7f997ba",
+      "memberNo": "009",
       "name": "王寶佳Renee",
       "profession": "置產投資客-台北市萬華區",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-10-22T01:18:28.385Z",
-      "lastEditor": "11 陳靖薇"
+      "aliases": [
+        "王寶佳Renee",
+        "王寶佳 Renee",
+        "王寶佳 Phoenix Wang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 10,
+      "memberId": "3f2c1c9d-5d7c-4e9b-9b01-e3064b52a5a3",
+      "memberNo": "010",
       "name": "王春雄Jayson",
       "profession": "理財規劃顧問-雙北",
+      "role": "主席",
       "chains": [
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "王春雄Jayson",
+        "王春雄 Jayson",
+        "王春雄 Jayson Wang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 11,
+      "memberId": "d89d856b-d56e-4482-9d94-736fcb962a42",
+      "memberNo": "011",
       "name": "陳靖薇",
       "profession": "包租代管-台北市內湖、松山區",
+      "role": "教育協調",
       "chains": [
         "B",
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-11T05:48:36.392Z",
-      "lastEditor": "11 陳靖薇"
+      "aliases": [
+        "陳靖薇",
+        "陳靖薇 Penny Chen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 12,
+      "memberId": "8b784368-8a24-4d39-855d-02f0f0cf0e31",
+      "memberNo": "012",
       "name": "蘇瓜雅",
       "profession": "財務管理-不動產聯合開發-台北市",
+      "role": "",
       "chains": [
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-09-22T12:59:29.315Z",
-      "lastEditor": "10 王春雄Jayson"
+      "aliases": [
+        "蘇瓜雅",
+        "蘇瓜雅 Sophia Su"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 13,
+      "memberId": "61110ea8-a51d-409e-a9c2-4aef423f9e1b",
+      "memberNo": "013",
       "name": "施宜妏",
       "profession": "金融業-法務顧問",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-25T10:58:28.529Z",
-      "lastEditor": "7 張瓊安"
+      "aliases": [
+        "施宜妏",
+        "施宜妏 YiwenShih"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 14,
+      "memberId": "2712509b-1843-4288-b31e-1eb717948e71",
+      "memberNo": "014",
       "name": "莊大永",
       "profession": "地主召集人-台東市-自主更新",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-10-31T11:54:12.972Z",
-      "lastEditor": "10 王春雄Jayson"
+      "aliases": [
+        "莊大永",
+        "莊大永 Chuang, Ta-Yung"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 15,
+      "memberId": "6062534a-84cf-4103-8354-cd7125451dd6",
+      "memberNo": "015",
       "name": "莊涵勝",
       "profession": "仲介經紀人-台北市信義區",
+      "role": "",
       "chains": [
         "A",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-08-06T06:21:07.050Z",
-      "lastEditor": "7 張瓊安"
+      "aliases": [
+        "莊涵勝",
+        "莊涵勝 HanSheng Chuang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 16,
+      "memberId": "0aeab44c-99b6-40df-a02d-f49140af5d0d",
+      "memberNo": "016",
       "name": "黃冠霖",
       "profession": "證券交易系統-軟體工程師",
+      "role": "",
       "chains": [
         "A",
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "黃冠霖",
+        "黃冠霖 Kuan Lin Huang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 17,
+      "memberId": "54ef941e-7eac-4ffc-bd9b-f1751dd81258",
+      "memberNo": "017",
       "name": "諸紀平",
       "profession": "住宅室內設計裝修-台北市",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "諸紀平",
+        "諸紀平 CHI PING CHU"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 18,
+      "memberId": "0275235c-5a13-4d53-bd30-ec3ba1afab13",
+      "memberNo": "018",
       "name": "陳秒螢Emma",
       "profession": "房屋貸款-新竹以北",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "陳秒螢Emma",
+        "陳秒螢 Emma",
+        "陳秒螢 chen miao ying"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 19,
+      "memberId": "d09e7be9-3291-4800-8231-24f0791021fe",
+      "memberNo": "019",
       "name": "李艾莉Aili",
       "profession": "工業蒸氣熱能系統",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "李艾莉Aili",
+        "李艾莉 Aili",
+        "李艾莉 AILI LEE"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 21,
+      "memberId": "2007f403-d76d-4da2-b672-e4ad6e6e1585",
+      "memberNo": "021",
       "name": "吳翊辰",
       "profession": "地政士-中彰投雲嘉南",
+      "role": "",
       "chains": [
         "A",
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "吳翊辰",
+        "吳翊辰 ICHEN WU"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 22,
+      "memberId": "cd076974-444b-4442-98f8-257bd6ecf51e",
+      "memberNo": "022",
       "name": "黃郁婷",
       "profession": "金融業-財務",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "黃郁婷",
+        "黃郁婷 Catherine Huang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 23,
+      "memberId": "6c897a22-626d-43a4-8266-e0b97e13066f",
+      "memberNo": "023",
       "name": "林必涵",
       "profession": "農地廠房收租-台中",
+      "role": "",
       "chains": [
         "A",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "林必涵",
+        "林必涵 Pi Han Lin"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 24,
+      "memberId": "45423f10-d671-4c3a-b112-905c43d7a977",
+      "memberNo": "024",
       "name": "蔡明璋",
       "profession": "合法隔套置產投資-台北市大安、中正區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "蔡明璋",
+        "蔡明璋 TSAI MING CHANG"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 25,
+      "memberId": "1f1ae34d-d7b9-43eb-bfce-f5ad0c1be639",
+      "memberNo": "025",
       "name": "王佳筠",
       "profession": "建案代銷專案管理-北部",
+      "role": "",
       "chains": [
         "B",
         "D",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-09-10T09:31:25.854Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "王佳筠",
+        "王佳筠 JIA"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 26,
+      "memberId": "b54f9bfe-8157-4f44-b4dd-2d3b1ac6b7e6",
+      "memberNo": "026",
       "name": "楊之慧",
       "profession": "金融業-後台交割",
+      "role": "",
       "chains": [
         "A",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "楊之慧",
+        "楊之慧 Yang Jr Huei"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 27,
+      "memberId": "6926fbb5-61fc-4b05-b1e0-1cdff74fba5d",
+      "memberNo": "027",
       "name": "陳黎玲Jossie",
       "profession": "會展空間裝修設計-新竹以北",
+      "role": "",
       "chains": [],
-      "note": "",
-      "updatedAt": "2026-10-30T12:25:25.463Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "陳黎玲Jossie",
+        "陳黎玲 Jossie",
+        "陳黎玲 JOSSIE"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 28,
+      "memberId": "4fc17ff6-1090-43d8-81e2-9b0461d22039",
+      "memberNo": "028",
       "name": "林佩君",
       "profession": "仲介經紀人-台北市中山區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-10-30T12:18:16.557Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "林佩君",
+        "林佩君 Pei Lin"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 29,
+      "memberId": "8a4504ee-0f35-49b8-b854-75e4e651345e",
+      "memberNo": "029",
       "name": "林媜媁Wei",
       "profession": "資通訊業-財務分析師",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "林媜媁Wei",
+        "林媜媁 Wei",
+        "林媜媁 Winnie Lin"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 30,
+      "memberId": "d81a70e4-3a4c-44ef-8346-47acc5cde339",
+      "memberNo": "030",
       "name": "李慧如Eva",
       "profession": "再造回收過濾鐵網、太空包",
+      "role": "",
       "chains": [
         "C",
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "李慧如Eva",
+        "李慧如 Eva",
+        "李慧如 LE HUI JU"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 31,
+      "memberId": "011dcf82-4e1b-4e36-a49a-274df351a87f",
+      "memberNo": "031",
       "name": "凃馨文Wen",
       "profession": "家電B2B",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-11-01T17:20:34.519Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "凃馨文Wen",
+        "凃馨文 Wen",
+        "凃馨文 TU SINGWEN"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 32,
+      "memberId": "a82753c4-dd59-4224-bd17-ab257d4fc411",
+      "memberNo": "032",
       "name": "柳慧燕",
       "profession": "危老都更推動建築師-台北市",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "柳慧燕",
+        "柳慧燕 Ann Liu"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 33,
+      "memberId": "327f6262-abb0-461f-8cbd-0ca03ec38035",
+      "memberNo": "033",
       "name": "宋馨巧",
       "profession": "韓語線上家教",
+      "role": "",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "宋馨巧",
+        "宋馨巧 Hsin-Chiao Sung"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 34,
+      "memberId": "0217b4c7-1d18-407c-a410-1104fc0412e5",
+      "memberNo": "034",
       "name": "張瑜晏",
       "profession": "不動產估價與鑑定-雙北、桃園",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "張瑜晏",
+        "張瑜晏 Chang Yu Yen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 35,
+      "memberId": "446dcfc9-6e0f-4099-bc80-7406a8a47790",
+      "memberNo": "035",
       "name": "陳昭男",
       "profession": "都更土地開發-台北市",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "陳昭男",
+        "陳昭男 Johnny",
+        "陳昭男Johnny"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 36,
+      "memberId": "af49ba4c-7769-4a9e-bfb1-8ebb4347331c",
+      "memberNo": "036",
       "name": "包育翎",
       "profession": "地主召集人-高雄市鳳山區",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "包育翎",
+        "包育翎 PAO,YU-LING"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 37,
+      "memberId": "469f4f16-9f3b-4ca7-97d8-486f4eadd2f5",
+      "memberNo": "037",
       "name": "蔡岱達",
       "profession": "磁磚經銷商-台中以北",
+      "role": "",
       "chains": [
         "A",
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "蔡岱達",
+        "蔡岱達 DAI-DA TSAI"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 38,
+      "memberId": "fbea94ed-b76e-4399-9139-224202b8cd75",
+      "memberNo": "038",
       "name": "蔡淯思Mina",
       "profession": "ERP專案管理",
+      "role": "",
       "chains": [
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "蔡淯思Mina",
+        "蔡淯思 Mina",
+        "蔡淯思 Mina Tsai"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 39,
+      "memberId": "46c98d19-c0d9-4f03-8cad-5cb4917bdc9c",
+      "memberNo": "039",
       "name": "詹媛婷",
       "profession": "房貸減壓-台北市",
+      "role": "",
       "chains": [
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "詹媛婷",
+        "詹媛婷 Chan yuan ting"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 40,
+      "memberId": "9fcc358f-ac5d-41dc-9270-0daa35372473",
+      "memberNo": "040",
       "name": "王雅慧Peggy",
       "profession": "置產投資客-台北市中山、大同區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "王雅慧Peggy",
+        "王雅慧 Peggy",
+        "王雅慧 Wang,ya-hui"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 41,
+      "memberId": "e72d44e0-1bad-4f91-b41d-8124b7831bd1",
+      "memberNo": "041",
       "name": "何俊彥",
       "profession": "老屋翻新包租代管-台北市",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-11-02T08:18:41.764Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "何俊彥",
+        "何俊彥 Daris Ho"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 42,
+      "memberId": "07db76eb-f9cb-4645-b242-74528f07b8f6",
+      "memberNo": "042",
       "name": "周育慈Anna",
       "profession": "包租代管-台北市大安區",
+      "role": "",
       "chains": [
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-08-04T13:40:48.733Z",
-      "lastEditor": "10 王春雄Jayson"
+      "aliases": [
+        "周育慈Anna",
+        "周育慈 Anna",
+        "周育慈 CHOU YU TZU"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 43,
+      "memberId": "cd83c75a-faab-434c-a138-63a695a6ef9f",
+      "memberNo": "043",
       "name": "洪嘉璿左左",
       "profession": "MMT天賦諮詢師",
+      "role": "導師協調",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "洪嘉璿左左",
+        "洪嘉璿（左左）",
+        "洪嘉璿 J.syuan"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 44,
+      "memberId": "b1137283-a9a6-4971-8a75-0cdc6e935dad",
+      "memberNo": "044",
       "name": "鍾智媛Fiona",
       "profession": "商務中心-台北市大安、中山區",
+      "role": "",
       "chains": [
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-25T14:49:24.447Z",
-      "lastEditor": "11 陳靖薇"
+      "aliases": [
+        "鍾智媛Fiona",
+        "鍾智媛 Fiona",
+        "鍾智媛 Fiona Chung Jhih Yuan"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 46,
+      "memberId": "b0aae71a-6c65-4cbc-a67b-b465e94452cb",
+      "memberNo": "046",
       "name": "林中群",
       "profession": "鋼結構防蝕工程",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "林中群",
+        "林中群 ChungChing Lin"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 47,
+      "memberId": "c7d4a5a9-a661-4631-9f98-ccdb241985da",
+      "memberNo": "047",
       "name": "蔡馨葳Mandy",
       "profession": "人壽財務規劃-桃園",
+      "role": "活動協調",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "蔡馨葳Mandy",
+        "蔡馨葳 Mandy",
+        "蔡馨葳 TSAI HSIN WEI"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 48,
+      "memberId": "583cbe10-c6a6-41f8-ace7-f5d21f17b255",
+      "memberNo": "048",
       "name": "林晏伃",
       "profession": "都更長照建築師-台北市",
+      "role": "",
       "chains": [
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "林晏伃",
+        "林晏伃 ALICE LIN"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 49,
+      "memberId": "4dac3110-9764-44f7-97cd-4911dbe3fe8e",
+      "memberNo": "049",
       "name": "李瑞雲Grace",
       "profession": "置產投資客-台北市松山區",
+      "role": "",
       "chains": [
         "A",
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "李瑞雲Grace",
+        "李瑞雲 Grace",
+        "李瑞雲"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 50,
+      "memberId": "aa8a1bd8-ce85-4a48-8102-f04b762e2098",
+      "memberNo": "050",
       "name": "謝夢瑰Dian",
       "profession": "高資產房地產顧問-台北",
+      "role": "",
       "chains": [
         "E"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "謝夢瑰Dian",
+        "謝夢瑰 Dian",
+        "謝夢瑰"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 52,
+      "memberId": "c2253067-63b6-480a-8df5-28e3cf02d75c",
+      "memberNo": "052",
       "name": "張怡蘋April",
       "profession": "工程顧問",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-09-10T09:30:39.734Z",
-      "lastEditor": "4 陳向柔Naomi"
+      "aliases": [
+        "張怡蘋April",
+        "張怡蘋 April",
+        "張怡蘋 April Chang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 53,
+      "memberId": "228510aa-4e60-4021-a54f-7e28e9085da7",
+      "memberNo": "053",
       "name": "張耕豪",
       "profession": "大板磚工程-連工帶料",
+      "role": "",
       "chains": [
         "B",
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "張耕豪"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 54,
+      "memberId": "2afe7de8-6d00-48d7-9e7c-4fca8e21a59f",
+      "memberNo": "054",
       "name": "陳品攸",
       "profession": "商業法律顧問",
+      "role": "秘書財務",
       "chains": [
         "C"
       ],
-      "note": "",
-      "updatedAt": "2026-07-10T02:17:05.843Z",
-      "lastEditor": "系統初始化匯入"
+      "aliases": [
+        "陳品攸",
+        "陳品攸 Yuna Chen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 55,
+      "memberId": "9b1e1cb1-b98d-4cb1-95da-13f03b0c7205",
+      "memberNo": "055",
       "name": "吳念鎧",
       "profession": "仲介經紀人-大新竹區",
+      "role": "",
       "chains": [
         "A"
       ],
-      "note": "",
-      "updatedAt": "2026-09-09T13:25:57.634Z",
-      "lastEditor": "7 張瓊安"
+      "aliases": [
+        "吳念鎧",
+        "吳念鎧 WU-NIEN-KAI"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 56,
+      "memberId": "a36fa24b-657f-404b-8081-af391e90478b",
+      "memberNo": "056",
       "name": "沈瑞婷",
       "profession": "智慧物流導入顧問",
+      "role": "",
       "chains": [
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-07-29T12:59:16.093Z",
-      "lastEditor": "7 張瓊安"
+      "aliases": [
+        "沈瑞婷",
+        "沈瑞婷 Ivy Shen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 57,
+      "memberId": "87fea3e6-fe6d-4f99-a150-82956659870d",
+      "memberNo": "057",
       "name": "古育瑋",
       "profession": "廠房建築師與營造-桃竹苗",
+      "role": "",
       "chains": [
         "D"
       ],
-      "note": "",
-      "updatedAt": "2026-09-11T03:45:52.086Z",
-      "lastEditor": "7 張瓊安"
+      "aliases": [
+        "古育瑋",
+        "古育瑋 Allen"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     },
     {
       "id": 58,
+      "memberId": "8b9ce989-7a67-4796-8d8f-aec3398d1e0a",
+      "memberNo": "058",
       "name": "王振伊（喬王）",
       "profession": "房產財經教育",
+      "role": "",
       "chains": [
         "B"
       ],
-      "note": "",
-      "updatedAt": "2026-10-08T08:05:40.968Z",
-      "lastEditor": "11 陳靖薇"
+      "aliases": [
+        "王振伊（喬王）",
+        "王振伊喬王",
+        "王振伊 Joe Wang"
+      ],
+      "updatedAt": "2026-11-03T03:41:59.011Z"
     }
   ],
   "groups": [
@@ -658,5 +955,9 @@
       "leader": "洪嘉璿左左",
       "schedule": "每月第 1、3 個週二・線上 20:30–21:30"
     }
-  ]
+  ],
+  "schemaVersion": 2,
+  "rosterVersion": 1,
+  "effectiveAsOf": "2026-11-03",
+  "contentHash": "aa316a9ccc18bfa83b84af97607c1dc33abecbeb7f172723a5b912fc61c5399d"
 }
