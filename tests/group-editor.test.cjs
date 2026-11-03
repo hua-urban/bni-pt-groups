@@ -24,7 +24,7 @@ function clone(value) {
 function makeRoster(version = 1, chains = ['A']) {
   return {
     ok: true,
-    schema: 2,
+    schemaVersion: 2,
     rosterVersion: version,
     effectiveAsOf: 'fixture-date',
     groups: CHAIN_ORDER.map((code) => ({ code, name: `Fixture ${code}`, leader: 'Fixture', schedule: '' })),

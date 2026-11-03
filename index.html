@@ -641,7 +641,7 @@ function render(data) {
 }
 
 function isAuthoritativeRosterPayload(data) {
-  return !!data && data.ok === true && data.schema === 2 &&
+  return !!data && data.ok === true && data.schemaVersion === 2 &&
     Number.isSafeInteger(data.rosterVersion) && data.rosterVersion >= 0 &&
     Array.isArray(data.groups) && Array.isArray(data.members);
 }
