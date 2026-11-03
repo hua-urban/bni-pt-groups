@@ -315,6 +315,13 @@
 
   .edit-btn.active { background: var(--white); }
 
+  .editor-identity {
+    width: 100%;
+    color: var(--white);
+    font-size: 13px;
+    text-align: center;
+  }
+
   body.edit-mode .member-card {
     cursor: pointer;
     transition: box-shadow 0.15s, border-color 0.15s;
@@ -461,90 +468,6 @@
   .toast[hidden] { display: none; }
   .toast.error { background: var(--red); }
 
-  /* ============================================================
-     存檔快照 ＋ 版本歷史（里程碑 3）
-     ============================================================ */
-  .modal-box-wide {
-    max-width: 560px;
-  }
-
-  .history-row {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-  }
-
-  .history-row-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 6px;
-  }
-
-  .history-meta {
-    font-size: 12px;
-    color: var(--ink-dim);
-  }
-
-  .chain-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-
-  .chain-count-pill {
-    background: var(--gray);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 12px;
-    padding: 2px 9px;
-  }
-
-  .chain-count-pill-unassigned {
-    color: var(--ink-dim);
-  }
-
-  .history-preview-toggle {
-    background: none;
-    border: none;
-    color: var(--red);
-    font-size: 12.5px;
-    cursor: pointer;
-    padding: 2px 0;
-    text-decoration: underline;
-  }
-
-  .history-preview-wrap {
-    margin: 6px 0;
-    font-size: 12.5px;
-    background: var(--gray);
-    border-radius: 6px;
-    padding: 8px 10px;
-  }
-
-  .history-preview-col {
-    margin-bottom: 4px;
-  }
-
-  .history-row-actions {
-    margin-top: 6px;
-  }
-
-  .history-restore-btn {
-    padding: 6px 12px;
-    font-size: 12.5px;
-    width: auto;
-    flex: none;
-  }
-
-  .history-restore-locked {
-    font-size: 12px;
-    color: var(--ink-dim);
-  }
 </style>
 <style id="hua-home-navigation-style">
 .hua-home-navigation { box-sizing: border-box; display: block; position: relative; width: 100%; margin: 0; padding: 10px 16px; background: #fff; border-bottom: 1px solid #ded6d3; text-align: left; }
@@ -567,10 +490,9 @@
     <div id="searchHint"></div>
   </div>
   <div class="edit-bar">
-    <button type="button" id="editToggleBtn" class="edit-btn">登入會員管理</button>
+    <button type="button" id="editToggleBtn" class="edit-btn">組長編輯模式</button>
     <button type="button" id="addGuestBtn" class="edit-btn add-guest-btn" hidden>＋ 新增組員</button>
-    <button type="button" id="snapshotBtn" class="edit-btn" hidden>📸 存檔目前版本</button>
-    <button type="button" id="historyBtn" class="edit-btn" hidden>🕓 版本紀錄</button>
+    <div id="editorIdentity" class="editor-identity" hidden></div>
   </div>
 </header>
 
@@ -589,12 +511,12 @@
   BNI 華都更分會 PowerTeam 組別管理系統
 </footer>
 
-<!-- 組長密碼 gate（進編輯模式前的門檻，PRD § 4：多一道門檻非真安全，doPost 後端另有校驗） -->
+<!-- 組長會員編號編輯碼 gate；實際授權一律由 GAS whoami 驗證。 -->
 <div class="modal-overlay" id="codeModalOverlay" hidden>
   <div class="modal-box">
     <h3>組長編輯模式</h3>
-    <p class="modal-hint">請輸入你的組長密碼才能進入編輯模式</p>
-    <input type="password" id="codeInput" class="modal-input" placeholder="請輸入組長密碼" autocomplete="off">
+    <p class="modal-hint">請輸入你的會員編號編輯碼</p>
+    <input type="password" id="codeInput" class="modal-input" placeholder="會員編號編輯碼" autocomplete="off" inputmode="numeric">
     <div class="modal-error" id="codeError"></div>
     <div class="modal-actions">
       <button type="button" class="modal-btn modal-btn-cancel" id="codeCancelBtn">取消</button>
@@ -611,11 +533,9 @@
     <div id="guestPickerWrap" hidden>
       <label class="modal-label" for="rosterSelect">從名冊選人</label>
       <select id="rosterSelect" class="modal-input"></select>
-      <label class="modal-checkbox-row">
-        <input type="checkbox" id="manualGuestToggle"> 名冊沒有這個人（手動輸入來賓）
-      </label>
-      <input type="text" id="guestNameInput" class="modal-input" placeholder="來賓姓名" hidden>
-      <input type="text" id="guestProfessionInput" class="modal-input" placeholder="專業別（選填）" hidden>
+      <input type="checkbox" id="manualGuestToggle" hidden disabled>
+      <input type="text" id="guestNameInput" class="modal-input" placeholder="來賓姓名" hidden disabled>
+      <input type="text" id="guestProfessionInput" class="modal-input" placeholder="專業別（選填）" hidden disabled>
     </div>
 
     <div class="chain-checkboxes" id="chainCheckboxes"></div>
@@ -624,45 +544,6 @@
     <div class="modal-actions">
       <button type="button" class="modal-btn modal-btn-cancel" id="memberCancelBtn">取消</button>
       <button type="button" class="modal-btn modal-btn-primary" id="memberSaveBtn">儲存</button>
-    </div>
-  </div>
-</div>
-
-<!-- 存檔目前版本 modal（里程碑 3）：任何組長密碼皆可存 -->
-<div class="modal-overlay" id="snapshotModalOverlay" hidden>
-  <div class="modal-box">
-    <h3>📸 存檔目前版本</h3>
-    <p class="modal-hint">為這個版本命名，之後可在「版本紀錄」找到並還原</p>
-    <input type="text" id="snapshotNameInput" class="modal-input" placeholder="例如：2026-07 月版">
-    <div class="modal-error" id="snapshotError"></div>
-    <div class="modal-actions">
-      <button type="button" class="modal-btn modal-btn-cancel" id="snapshotCancelBtn">取消</button>
-      <button type="button" class="modal-btn modal-btn-primary" id="snapshotSaveBtn">存檔</button>
-    </div>
-  </div>
-</div>
-
-<!-- 版本紀錄面板（里程碑 3）：列出所有快照，還原鈕僅管理員看得到 -->
-<div class="modal-overlay" id="historyModalOverlay" hidden>
-  <div class="modal-box modal-box-wide">
-    <h3>🕓 版本紀錄</h3>
-    <p class="modal-hint" id="historyHint">載入中…</p>
-    <div id="historyList"></div>
-    <div class="modal-actions">
-      <button type="button" class="modal-btn modal-btn-cancel" id="historyCloseBtn">關閉</button>
-    </div>
-  </div>
-</div>
-
-<!-- 還原二次確認（里程碑 3）：後端 doPost action=restore 仍會再驗一次管理員密碼，前端只是提示層 -->
-<div class="modal-overlay" id="restoreConfirmOverlay" hidden>
-  <div class="modal-box">
-    <h3>確定要還原嗎？</h3>
-    <p class="modal-hint" id="restoreConfirmText"></p>
-    <div class="modal-error" id="restoreError"></div>
-    <div class="modal-actions">
-      <button type="button" class="modal-btn modal-btn-cancel" id="restoreCancelBtn">取消</button>
-      <button type="button" class="modal-btn modal-btn-primary" id="restoreConfirmBtn">確定還原</button>
     </div>
   </div>
 </div>
@@ -686,6 +567,10 @@ const searchHint = document.getElementById('searchHint');
 
 // 存最新一份看板資料，供編輯模式（modal 開啟時查該員目前所屬鏈、名冊下拉選單）讀取。
 let LATEST_DATA = { groups: [], members: [] };
+let latestRosterAuthoritative = false;
+let latestRosterVersion = null;
+let latestRosterReadId = 0;
+const UNCONFIRMED_ROSTER_STATUS = '無法確認最新名冊，目前畫面僅供參考；暫停編輯。';
 
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -755,6 +640,12 @@ function render(data) {
   applySearch();
 }
 
+function isAuthoritativeRosterPayload(data) {
+  return !!data && data.ok === true && data.schema === 2 &&
+    Number.isSafeInteger(data.rosterVersion) && data.rosterVersion >= 0 &&
+    Array.isArray(data.groups) && Array.isArray(data.members);
+}
+
 function applySearch() {
   const q = searchInput.value.trim();
   const cards = document.querySelectorAll('.member-card');
@@ -785,29 +676,40 @@ function applySearch() {
 
 searchInput.addEventListener('input', applySearch);
 
-// 讀取 GAS 最新資料並覆蓋畫面；失敗則保留現有畫面（降級不假裝成功）。
-// opts.retries 給存檔後刷新用——doPost 剛寫完緊接 doGet 偶發失敗/太快會誤閃「連不到後端」
-// 嚇組長以為沒存到（資料其實已寫對），先靜默重試幾次再顯示降級文案。
+// 讀取 schema 2 的 GAS 名冊；失敗時保留畫面供唯讀瀏覽，但不得進入編輯模式。
+// opts.retries 用於儲存後刷新及版本衝突後重新確認最新資料。
 function loadFromGas(opts) {
   opts = opts || {};
   var retriesLeft = opts.retries || 0;
   var retryDelayMs = opts.retryDelayMs || 1500;
+  var readId = ++latestRosterReadId;
+  latestRosterAuthoritative = false;
+  latestRosterVersion = null;
 
   return fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
     .then(function (res) { return res.json(); })
     .then(function (data) {
-      if (!data || !data.ok) throw new Error('bad response');
+      if (readId !== latestRosterReadId) return data;
+      if (!isAuthoritativeRosterPayload(data)) throw new Error('最新名冊格式或版本無法確認');
       render(data);
-      loadStatusEl.textContent = Number.isSafeInteger(data.rosterVersion) ? '會員名單｜名單確認日期：' + data.effectiveAsOf : '目前顯示備援名單，最新資料待確認';
+      latestRosterAuthoritative = true;
+      latestRosterVersion = data.rosterVersion;
+      loadStatusEl.textContent = '會員名單｜名單確認日期：' + (data.effectiveAsOf || '未提供') + '｜版本 ' + data.rosterVersion;
       return data;
     })
     .catch(function (err) {
+      if (readId !== latestRosterReadId) throw err;
       if (retriesLeft > 0) {
         return new Promise(function (resolve) { setTimeout(resolve, retryDelayMs); })
-          .then(function () { return loadFromGas({ retries: retriesLeft - 1, retryDelayMs: retryDelayMs }); });
+          .then(function () {
+            if (readId !== latestRosterReadId) throw err;
+            return loadFromGas({ retries: retriesLeft - 1, retryDelayMs: retryDelayMs });
+          });
       }
+      latestRosterAuthoritative = false;
+      latestRosterVersion = null;
       console.error(err);
-      loadStatusEl.textContent = '⚠️ 連不到後端，目前顯示的是內建初始分組（可能非最新）';
+      loadStatusEl.textContent = UNCONFIRMED_ROSTER_STATUS;
       throw err;
     });
 }
@@ -817,63 +719,50 @@ function isValidRosterPayload(data) {
   return !!data && Array.isArray(data.members) && data.members.length > 0 && Array.isArray(data.groups);
 }
 
-// 只取 groups/members 內容序列化，用來判斷兩份資料「內容是否真的不同」，
-// 忽略 GAS 回應多出的 ok/generatedAt 等每次必變欄位。
-function rosterSignature(data) {
-  return JSON.stringify({ groups: (data && data.groups) || [], members: (data && data.members) || [] });
-}
-
-// 背景靜默核對 GAS：不顯示任何載入文字，資料跟畫面上的一樣就什麼都不做，
-// 不一樣才重繪——避免 data.json 快照跟 GAS 現況間的 10 分鐘空窗被使用者看到閃爍。
-function silentSyncFromGas() {
-  fetch(GAS_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!isValidRosterPayload(data)) return;
-      if (rosterSignature(data) !== rosterSignature(LATEST_DATA)) render(data);
-    })
-    .catch(function (err) {
-      console.error('背景核對 GAS 失敗（不影響目前畫面）', err);
-    });
-}
-
 // Central API is authoritative. Static snapshots are read only after a failed live read.
-loadFromGas().catch(function () {
+var initialRosterLoad = loadFromGas();
+var initialRosterReadId = latestRosterReadId;
+initialRosterLoad.catch(function () {
+  if (initialRosterReadId !== latestRosterReadId) return;
   return fetch('data.json?t=' + Date.now(), {cache:'no-store'})
     .then(function (res) { if(!res.ok)throw new Error('Snapshot unavailable');return res.json(); })
-    .then(function(data){if(!isValidRosterPayload(data))throw new Error('Invalid snapshot');render(data);loadStatusEl.textContent='目前顯示備援快照，最新名冊待確認';})
-    .catch(function(){render(window.PT_SEED || {groups:[],members:[]});loadStatusEl.textContent='目前顯示備援資料，最新名冊待確認';});
+    .then(function(data){
+      if (initialRosterReadId !== latestRosterReadId) return;
+      if(!isValidRosterPayload(data))throw new Error('Invalid snapshot');
+      render(data);
+      latestRosterAuthoritative=false;
+      latestRosterVersion=null;
+      loadStatusEl.textContent=UNCONFIRMED_ROSTER_STATUS;
+    })
+    .catch(function(){
+      if (initialRosterReadId !== latestRosterReadId) return;
+      render(window.PT_SEED || {groups:[],members:[]});
+      latestRosterAuthoritative=false;
+      latestRosterVersion=null;
+      loadStatusEl.textContent=UNCONFIRMED_ROSTER_STATUS;
+    });
 });
 </script>
 
 <script>
 /* ============================================================
-   組長編輯模式（里程碑 2 ＋ 2.1：組長密碼）
-   組長密碼＝各組長會員編號，只在前端做「多一道門檻」判斷（PRD § 4，非真安全機制，
-   會員編號本就是看板公開資訊）；真正的寫入授權與身份判斷由後端 doPost 用同一組密碼
-   反查組長身份（不信前端傳來的身份字串，防偽造）。
+   組長編輯模式：所有會員編號編輯碼（包含既有核准的 11）一律由 GAS whoami 驗證。
+   前端不把公開會員編號清單當成授權依據。
    ============================================================ */
-// 各組長密碼（＝會員編號）。前端只需要「是不是合法密碼」這道門檻，
-// 誰是誰、last_editor 寫誰一律由後端 resolveLeaderByCode_ 決定。
-// 2026-08-09 擴充：成長協調組全員（組長陳昭男 35 ＋ 組員 5/28/31/34/36）也能編輯。
-// 來源：九長會議索引「成長協調｜035 陳昭男 Johnny｜005 劉恩秀、028 林佩君、031 凃馨文、032 柳慧燕、034 張瑜晏、036 包育翎」。
-// 032 柳慧燕已在組長名單內（A 組長），不重複。
-// 2026-08-26：E 組組長交接（8/7 邱愛莉批准）——43 洪嘉璿左左接任 E 組組長。
-// 2026-10-21：7 本人表示不再擔任副組長，移除編輯權（成員身分不變）。
-// 前 5 碼＝E 組長 43＋B/C/D/A 組長（11 陳靖薇／10 王春雄／4 陳向柔／32 柳慧燕），後 6 碼＝成長協調。
-const LEADER_CODES = ['43', '11', '10', '4', '32', '35', '5', '28', '31', '34', '36'];
-
 function normalizeLeaderCode(raw) {
   return String(raw || '').trim().replace(/^0+(?=\d)/, '');
 }
 
 let editMode = false;
 let savedEditCode = '';
-let isAdmin = false; // 由後端 whoami 回報；只決定「還原鈕要不要出現」，後端 doPost action=restore 仍會再驗一次（里程碑 3）
-let editingMemberId = null; // 卡片點擊進來的編輯：目前這位的 id；新增組員流程則用 rosterSelect 決定
+let groupEditorLabel = '';
+let editingMemberId = null;
+let pendingSavePayload = null;
+let pendingSaveSignature = null;
 
 const editToggleBtn = document.getElementById('editToggleBtn');
 const addGuestBtn = document.getElementById('addGuestBtn');
+const editorIdentity = document.getElementById('editorIdentity');
 
 const codeModalOverlay = document.getElementById('codeModalOverlay');
 const codeInput = document.getElementById('codeInput');
@@ -904,7 +793,7 @@ function showToast(msg, isError) {
   toastTimer = setTimeout(function () { toastEl.hidden = true; }, 3200);
 }
 
-/* ---------- 組長密碼 gate modal ---------- */
+/* ---------- 伺服器驗證的會員編號編輯碼 gate ---------- */
 
 function openCodeModal() {
   codeInput.value = '';
@@ -917,43 +806,47 @@ function closeCodeModal() {
   codeModalOverlay.hidden = true;
 }
 
-function startEditSession(code, admin) {
-  savedEditCode = code; // 傳給後端的密碼；後端會再自己反查一次身份，不信這裡
-  isAdmin = admin; // 只決定「還原鈕要不要出現」；真正授權一律由後端 doPost 再驗一次
-  closeCodeModal();
-  // 進編輯模式前先拉一次 GAS 最新資料當編輯基準，避免兩位組長前後台資料不同步、
-  // 改到一半互相覆蓋。這裡可以顯示等待提示，組長本來就預期存檔要等。
+function isAuthorizedGroupEditor(data) {
+  return !!data && data.ok === true && data.isAdmin === false &&
+    typeof data.label === 'string' && data.label.trim() !== '' &&
+    Number.isSafeInteger(data.rosterVersion) &&
+    Array.isArray(data.editableGroups) &&
+    CHAIN_ORDER.every(function (code) { return data.editableGroups.indexOf(code) !== -1; });
+}
+
+function startEditSession(code, identity) {
   loadStatusEl.textContent = '正在同步最新分組資料…';
-  loadFromGas()
-    .catch(function () { /* 失敗仍讓組長進得去，沿用目前畫面資料；loadFromGas 內部已設置降級文案 */ })
-    .then(function () { enterEditMode(); });
+  return loadFromGas()
+    .then(function (snapshot) {
+      if (!latestRosterAuthoritative || latestRosterVersion !== snapshot.rosterVersion) {
+        throw new Error('無法確認最新名冊，請重新載入後再試');
+      }
+      savedEditCode = code;
+      groupEditorLabel = identity.label.trim();
+      closeCodeModal();
+      enterEditMode();
+    })
+    .catch(function () {
+      throw new Error('無法確認最新名冊，請檢查連線並重新整理後再試。');
+    });
 }
 
 function submitCode() {
-  const normalized = normalizeLeaderCode(codeInput.value);
-  if (LEADER_CODES.indexOf(normalized) !== -1) {
-    startEditSession(normalized, false);
-    return;
-  }
-  // 不在組長名單 → 可能是管理員密碼：前端不存任何管理員資訊，交給後端 whoami 判斷
-  const raw = String(codeInput.value || '').trim();
-  if (!raw) {
-    codeError.textContent = '組長密碼不正確，請再試一次';
+  const code = normalizeLeaderCode(codeInput.value);
+  if (!code) {
+    codeError.textContent = '請輸入會員編號編輯碼';
     return;
   }
   codeError.textContent = '';
   codeSubmitBtn.disabled = true;
-  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: raw, action: 'whoami' }) })
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'whoami', code: code }) })
     .then(function (res) { return res.json(); })
     .then(function (data) {
-      if (data && data.ok) {
-        startEditSession(raw, !!data.isAdmin);
-      } else {
-        codeError.textContent = '組長密碼不正確，請再試一次';
-      }
+      if (!isAuthorizedGroupEditor(data)) throw new Error('編輯碼未通過組長權限驗證');
+      return startEditSession(code, data);
     })
     .catch(function (err) {
-      codeError.textContent = '網路錯誤，請重試：' + err.message;
+      codeError.textContent = err && err.message ? err.message : '驗證失敗，請重試';
     })
     .finally(function () {
       codeSubmitBtn.disabled = false;
@@ -963,22 +856,23 @@ function submitCode() {
 function enterEditMode() {
   editMode = true;
   document.body.classList.add('edit-mode');
-  editToggleBtn.textContent = '🔒 離開編輯模式';
+  editToggleBtn.textContent = '🔒 結束組長編輯';
   editToggleBtn.classList.add('active');
   addGuestBtn.hidden = false;
-  snapshotBtn.hidden = false;
-  historyBtn.hidden = false;
+  editorIdentity.textContent = '組長編輯者：' + groupEditorLabel + '（依會員編號編輯碼驗證，非 Google 登入身分）';
+  editorIdentity.hidden = false;
 }
 
 function exitEditMode() {
   editMode = false;
-  isAdmin = false;
   document.body.classList.remove('edit-mode');
-  editToggleBtn.textContent = '🔓 組長編輯模式';
+  editToggleBtn.textContent = '組長編輯模式';
   editToggleBtn.classList.remove('active');
   addGuestBtn.hidden = true;
-  snapshotBtn.hidden = true;
-  historyBtn.hidden = true;
+  editorIdentity.textContent = '';
+  editorIdentity.hidden = true;
+  savedEditCode = '';
+  groupEditorLabel = '';
 }
 
 editToggleBtn.addEventListener('click', function () {
@@ -1003,6 +897,7 @@ function chainLabel(code) {
 }
 
 function buildChainCheckboxes(selectedCodes) {
+  selectedCodes = Array.isArray(selectedCodes) ? selectedCodes : [];
   chainCheckboxes.innerHTML = CHAIN_ORDER.map(function (code) {
     const checked = selectedCodes.indexOf(code) !== -1 ? ' checked' : '';
     return (
@@ -1022,6 +917,18 @@ function findMemberById(id) {
   return (LATEST_DATA.members || []).find(function (m) { return String(m.id) === String(id); });
 }
 
+function isMemberNumber(value) {
+  return (typeof value === 'number' && Number.isSafeInteger(value) && value > 0) ||
+    (typeof value === 'string' && /^\d+$/.test(value.trim()) && Number(value) > 0);
+}
+
+function isVersionConflictResponse(data) {
+  const code = String(data && (data.code || data.errorCode || data.reason) || '');
+  const message = String(data && data.error || '');
+  return /VERSION_(?:CONFLICT|MISMATCH)|version[_ -]conflict|version[_ -]mismatch/i.test(code + ' ' + message) ||
+    /版本.{0,8}(?:衝突|不一致|已更新)|(?:衝突|不一致).{0,8}版本|名單已由其他人更新|請重新整理後再確認分組/.test(message);
+}
+
 // 點組員卡開啟：換組／移除（全取消勾選）共用這支
 function openMemberModal(id, name) {
   editingMemberId = id;
@@ -1033,15 +940,18 @@ function openMemberModal(id, name) {
   memberModalOverlay.hidden = false;
 }
 
-// 「＋ 新增組員」開啟：從 54 人名冊下拉挑人，或手動輸入名冊沒有的臨時來賓
+// 「＋ 新增組員」只從最新中央名冊挑選既有會員，再調整其 PowerTeam 分組。
 function openAddGuestModal() {
   editingMemberId = null;
   memberModalTitle.textContent = '新增組員';
   memberError.textContent = '';
   guestPickerWrap.hidden = false;
   manualGuestToggle.checked = false;
+  manualGuestToggle.disabled = true;
   guestNameInput.hidden = true;
+  guestNameInput.disabled = true;
   guestProfessionInput.hidden = true;
+  guestProfessionInput.disabled = true;
   guestNameInput.value = '';
   guestProfessionInput.value = '';
 
@@ -1064,14 +974,6 @@ rosterSelect.addEventListener('change', function () {
   buildChainCheckboxes(m ? m.chains : []);
 });
 
-manualGuestToggle.addEventListener('change', function () {
-  const manual = manualGuestToggle.checked;
-  guestNameInput.hidden = !manual;
-  guestProfessionInput.hidden = !manual;
-  rosterSelect.disabled = manual;
-  buildChainCheckboxes(manual ? [] : (findMemberById(rosterSelect.value) || {}).chains || []);
-});
-
 function closeMemberModal() {
   memberModalOverlay.hidden = true;
 }
@@ -1090,296 +992,135 @@ document.addEventListener('click', function (e) {
   openMemberModal(card.getAttribute('data-id'), card.getAttribute('data-name'));
 });
 
-function saveMember() {
-  const chains = getCheckedChains();
-  const isGuestFlow = !guestPickerWrap.hidden;
-  let payload = { code: savedEditCode, chains: chains };
+function currentSaveSignature(code, id, chains) {
+  return JSON.stringify({ code: code, id: String(id), chains: chains });
+}
 
-  if (isGuestFlow && manualGuestToggle.checked) {
-    const name = guestNameInput.value.trim();
-    if (!name) {
-      memberError.textContent = '請輸入來賓姓名';
-      return;
-    }
-    payload.isNewGuest = true;
-    payload.name = name;
-    payload.profession = guestProfessionInput.value.trim();
-  } else if (isGuestFlow) {
-    payload.id = rosterSelect.value;
-  } else {
-    payload.id = editingMemberId;
+function clearPendingSave() {
+  pendingSavePayload = null;
+  pendingSaveSignature = null;
+}
+
+function refreshAfterVersionConflict() {
+  memberError.textContent = '名單版本衝突，正在重新載入最新名單…';
+  return loadFromGas({ retries: 2, retryDelayMs: 1500 }).then(function () {
+    const selectedId = guestPickerWrap.hidden ? editingMemberId : rosterSelect.value;
+    const member = findMemberById(selectedId);
+    if (member) buildChainCheckboxes(member.chains || []);
+    memberError.textContent = '名單版本衝突，已更新至版本 ' + latestRosterVersion + '。請確認分組後再儲存。';
+  }).catch(function () {
+    memberError.textContent = '名單版本衝突，且無法確認最新名冊。請重新開啟編輯模式後再試。';
+  });
+}
+
+function sendMemberUpdate(payload, signature) {
+  pendingSavePayload = payload;
+  pendingSaveSignature = signature;
+  memberError.textContent = '';
+
+  return fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data || data.ok !== true) {
+        clearPendingSave();
+        if (isVersionConflictResponse(data)) return refreshAfterVersionConflict();
+        memberError.textContent = (data && data.error) || '儲存失敗，請重試';
+        return;
+      }
+      if (!Number.isSafeInteger(data.rosterVersion) || data.rosterVersion < 0) {
+        throw new Error('後端回應缺少有效名單版本');
+      }
+
+      clearPendingSave();
+      return loadFromGas({ retries: 2, retryDelayMs: 1500 }).then(function () {
+        closeMemberModal();
+        showToast('✅ 已儲存：' + (data.name || '組員分組'));
+      }, function () {
+        memberError.textContent = '後端已確認儲存成功（版本 ' + data.rosterVersion + '），但目前無法確認最新名冊；重新取得最新資料前不能繼續編輯。';
+      });
+    })
+    .catch(function (err) {
+      if (pendingSavePayload && pendingSaveSignature === signature) {
+        memberError.textContent = '網路回應不明。再次按儲存會以相同請求編號重試；請勿另開新請求。';
+      } else {
+        memberError.textContent = '網路錯誤，請重試：' + err.message;
+      }
+    });
+}
+
+function saveMember() {
+  if (!editMode || !savedEditCode) {
+    memberError.textContent = '請先通過組長編輯驗證';
+    return;
+  }
+  if (!latestRosterAuthoritative || !Number.isSafeInteger(latestRosterVersion)) {
+    memberError.textContent = '目前名單是備援或尚未確認狀態，無法儲存；請重新開啟編輯模式取得最新名單。';
+    return;
   }
 
+  const isRosterPickerFlow = !guestPickerWrap.hidden;
+  if (isRosterPickerFlow && manualGuestToggle.checked) {
+    memberError.textContent = '只能選擇中央名冊中的既有會員';
+    return;
+  }
+
+  const requestedId = isRosterPickerFlow ? rosterSelect.value : editingMemberId;
+  const member = findMemberById(requestedId);
+  if (!member || !isMemberNumber(member.id)) {
+    memberError.textContent = '請選擇中央名冊中的既有會員';
+    return;
+  }
+
+  const chains = getCheckedChains();
+  if (chains.some(function (code) { return CHAIN_ORDER.indexOf(code) === -1; })) {
+    memberError.textContent = '分組資料不正確，請重新選擇';
+    return;
+  }
+
+  const signature = currentSaveSignature(savedEditCode, member.id, chains);
   memberError.textContent = '';
   memberSaveBtn.disabled = true;
   memberSaveBtn.textContent = '儲存中…';
 
-  // text/plain body（不設 Content-Type header，瀏覽器預設 text/plain 避開 CORS preflight，PRD § 6.1）
-  fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || !data.ok) {
-        memberError.textContent = (data && data.error) || '儲存失敗，請重試';
-        return;
-      }
-      closeMemberModal();
-      showToast('✅ 已儲存：' + data.name);
-      return loadFromGas({ retries: 2, retryDelayMs: 1500 });
-    })
-    .catch(function (err) {
-      memberError.textContent = '網路錯誤，請重試：' + err.message;
-    })
-    .finally(function () {
-      memberSaveBtn.disabled = false;
-      memberSaveBtn.textContent = '儲存';
-    });
+  function submitCurrentSelection() {
+    if (!latestRosterAuthoritative || !Number.isSafeInteger(latestRosterVersion)) {
+      memberError.textContent = '無法確認最新名單，請重新開啟編輯模式後再儲存。';
+      return Promise.resolve();
+    }
+    const payload = {
+      action: 'updateMember',
+      code: savedEditCode,
+      id: member.id,
+      chains: chains,
+      expectedVersion: latestRosterVersion,
+      requestId: 'group-edit-' + crypto.randomUUID()
+    };
+    return sendMemberUpdate(payload, signature);
+  }
+
+  let operation;
+  if (pendingSavePayload && pendingSaveSignature === signature) {
+    operation = sendMemberUpdate(pendingSavePayload, pendingSaveSignature);
+  } else if (pendingSavePayload) {
+    // 使用者已改過會員或分組：先更新版本，再建立新的 requestId 和 payload。
+    clearPendingSave();
+    operation = loadFromGas({ retries: 2, retryDelayMs: 1500 })
+      .then(submitCurrentSelection)
+      .catch(function () {
+        memberError.textContent = '無法確認最新名單，尚未送出這次變更。請重新開啟編輯模式後再試。';
+      });
+  } else {
+    operation = submitCurrentSelection();
+  }
+
+  Promise.resolve(operation).finally(function () {
+    memberSaveBtn.disabled = false;
+    memberSaveBtn.textContent = '儲存';
+  });
 }
 
 memberSaveBtn.addEventListener('click', saveMember);
 </script>
 
-<script>
-/* ============================================================
-   存檔快照 ＋ 版本歷史 ＋ 還原（里程碑 3）
-   還原鈕是否出現只看前端 isAdmin（由後端 whoami 回報）——這只是 UX 層的第一道門檻，
-   真正授權一律由後端 doPost action=restore 用密碼反查身份再驗一次（見 gas/Code.gs handleRestoreAction_），
-   不論這裡的旗標被怎麼繞過，非管理員密碼一律被後端拒絕。
-   ============================================================ */
-const snapshotBtn = document.getElementById('snapshotBtn');
-const historyBtn = document.getElementById('historyBtn');
-
-const snapshotModalOverlay = document.getElementById('snapshotModalOverlay');
-const snapshotNameInput = document.getElementById('snapshotNameInput');
-const snapshotError = document.getElementById('snapshotError');
-const snapshotCancelBtn = document.getElementById('snapshotCancelBtn');
-const snapshotSaveBtn = document.getElementById('snapshotSaveBtn');
-
-const historyModalOverlay = document.getElementById('historyModalOverlay');
-const historyHint = document.getElementById('historyHint');
-const historyList = document.getElementById('historyList');
-const historyCloseBtn = document.getElementById('historyCloseBtn');
-
-const restoreConfirmOverlay = document.getElementById('restoreConfirmOverlay');
-const restoreConfirmText = document.getElementById('restoreConfirmText');
-const restoreError = document.getElementById('restoreError');
-const restoreCancelBtn = document.getElementById('restoreCancelBtn');
-const restoreConfirmBtn = document.getElementById('restoreConfirmBtn');
-
-let LATEST_SNAPSHOTS = [];
-let pendingRestoreTimestamp = null;
-
-function defaultSnapshotName() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, '0');
-  return y + '-' + m + ' 月版';
-}
-
-function formatTaipeiTime(iso) {
-  try {
-    return new Date(iso).toLocaleString('zh-TW', {
-      timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', hour12: false
-    });
-  } catch (err) {
-    return iso;
-  }
-}
-
-/* ---------- 存檔目前版本 ---------- */
-
-function openSnapshotModal() {
-  snapshotNameInput.value = defaultSnapshotName();
-  snapshotError.textContent = '';
-  snapshotModalOverlay.hidden = false;
-  snapshotNameInput.focus();
-  snapshotNameInput.select();
-}
-
-function closeSnapshotModal() {
-  snapshotModalOverlay.hidden = true;
-}
-
-function saveSnapshot() {
-  const name = snapshotNameInput.value.trim();
-  if (!name) {
-    snapshotError.textContent = '請輸入快照名稱';
-    return;
-  }
-  snapshotError.textContent = '';
-  snapshotSaveBtn.disabled = true;
-  snapshotSaveBtn.textContent = '存檔中…';
-
-  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: savedEditCode, action: 'snapshot', name: name }) })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || !data.ok) {
-        snapshotError.textContent = (data && data.error) || '存檔失敗，請重試';
-        return;
-      }
-      closeSnapshotModal();
-      showToast('📸 已存檔版本〈' + data.name + '〉');
-    })
-    .catch(function (err) {
-      snapshotError.textContent = '網路錯誤，請重試：' + err.message;
-    })
-    .finally(function () {
-      snapshotSaveBtn.disabled = false;
-      snapshotSaveBtn.textContent = '存檔';
-    });
-}
-
-snapshotBtn.addEventListener('click', function () { if (editMode) openSnapshotModal(); });
-snapshotCancelBtn.addEventListener('click', closeSnapshotModal);
-snapshotSaveBtn.addEventListener('click', saveSnapshot);
-snapshotNameInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') saveSnapshot();
-});
-
-/* ---------- 版本紀錄面板 ---------- */
-
-function chainSummaryHtml(counts) {
-  return CHAIN_ORDER.map(function (c) {
-    return '<span class="chain-count-pill">' + c + ' ' + (counts[c] || 0) + '</span>';
-  }).join('') + '<span class="chain-count-pill chain-count-pill-unassigned">未分組 ' + (counts.unassigned || 0) + '</span>';
-}
-
-function memberNameById(id) {
-  const m = (LATEST_DATA.members || []).find(function (x) { return String(x.id) === String(id); });
-  return m ? m.name : ('#' + id + '（找不到姓名，可能已異動）');
-}
-
-function previewHtml(members) {
-  const byChain = {};
-  CHAIN_ORDER.forEach(function (c) { byChain[c] = []; });
-  (members || []).forEach(function (m) {
-    (m.chains || []).forEach(function (c) { if (byChain[c]) byChain[c].push(memberNameById(m.id)); });
-  });
-  return '<div class="history-preview">' + CHAIN_ORDER.map(function (c) {
-    return '<div class="history-preview-col"><strong>' + c + '</strong>：' + (byChain[c].join('、') || '（無）') + '</div>';
-  }).join('') + '</div>';
-}
-
-function historyRowHtml(snap, idx) {
-  const restoreBtnHtml = isAdmin
-    ? '<button type="button" class="modal-btn modal-btn-primary history-restore-btn" data-idx="' + idx + '">還原到這版</button>'
-    : '<span class="history-restore-locked">只有管理員能還原</span>';
-  return (
-    '<div class="history-row">' +
-      '<div class="history-row-head">' +
-        '<div><strong>' + escapeHtml(snap.name) + '</strong></div>' +
-        '<div class="history-meta">' + formatTaipeiTime(snap.timestamp) + '・操作者：' + escapeHtml(snap.operator) + '</div>' +
-      '</div>' +
-      '<div class="chain-summary">' + chainSummaryHtml(snap.counts) + '</div>' +
-      '<button type="button" class="history-preview-toggle" data-idx="' + idx + '">預覽名單</button>' +
-      '<div class="history-preview-wrap" id="historyPreview' + idx + '" hidden></div>' +
-      '<div class="history-row-actions">' + restoreBtnHtml + '</div>' +
-    '</div>'
-  );
-}
-
-function openHistoryModal() {
-  historyModalOverlay.hidden = false;
-  historyHint.textContent = '載入中…';
-  historyList.innerHTML = '';
-
-  fetch(GAS_URL + '?action=listSnapshots&t=' + Date.now(), { method: 'GET', cache: 'no-store' })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || !data.ok) throw new Error('bad response');
-      LATEST_SNAPSHOTS = data.snapshots || [];
-      if (!LATEST_SNAPSHOTS.length) {
-        historyHint.textContent = '目前還沒有任何存檔版本';
-        return;
-      }
-      historyHint.textContent = '共 ' + LATEST_SNAPSHOTS.length + ' 筆版本（新到舊）';
-      historyList.innerHTML = LATEST_SNAPSHOTS.map(function (s, i) { return historyRowHtml(s, i); }).join('');
-    })
-    .catch(function (err) {
-      historyHint.textContent = '⚠️ 載入版本紀錄失敗，請重試：' + err.message;
-    });
-}
-
-function closeHistoryModal() {
-  historyModalOverlay.hidden = true;
-}
-
-historyBtn.addEventListener('click', function () { if (editMode) openHistoryModal(); });
-historyCloseBtn.addEventListener('click', closeHistoryModal);
-
-historyList.addEventListener('click', function (e) {
-  const previewToggleBtn = e.target.closest('.history-preview-toggle');
-  if (previewToggleBtn) {
-    const idx = previewToggleBtn.getAttribute('data-idx');
-    const wrap = document.getElementById('historyPreview' + idx);
-    if (wrap.hidden) {
-      wrap.innerHTML = previewHtml(LATEST_SNAPSHOTS[idx].members);
-      wrap.hidden = false;
-      previewToggleBtn.textContent = '收合名單';
-    } else {
-      wrap.hidden = true;
-      previewToggleBtn.textContent = '預覽名單';
-    }
-    return;
-  }
-  const restoreBtn = e.target.closest('.history-restore-btn');
-  if (restoreBtn) {
-    const idx = restoreBtn.getAttribute('data-idx');
-    const snap = LATEST_SNAPSHOTS[idx];
-    openRestoreConfirm(snap.timestamp, snap.name);
-  }
-});
-
-/* ---------- 還原二次確認 ---------- */
-
-function openRestoreConfirm(timestamp, name) {
-  pendingRestoreTimestamp = timestamp;
-  restoreConfirmText.textContent = '確定把分組還原到〈' + name + '〉？目前分組會被覆蓋（系統會先自動備份現況）';
-  restoreError.textContent = '';
-  restoreConfirmOverlay.hidden = false;
-}
-
-function closeRestoreConfirm() {
-  restoreConfirmOverlay.hidden = true;
-}
-
-function confirmRestore() {
-  if (!isAdmin) {
-    restoreError.textContent = '只有管理員能還原';
-    return;
-  }
-  restoreError.textContent = '';
-  restoreConfirmBtn.disabled = true;
-  restoreConfirmBtn.textContent = '還原中…';
-
-  fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ code: savedEditCode, action: 'restore', timestamp: pendingRestoreTimestamp }) })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (!data || !data.ok) {
-        restoreError.textContent = (data && data.error) || '還原失敗，請重試';
-        return;
-      }
-      closeRestoreConfirm();
-      closeHistoryModal();
-      showToast('⚠️ 已還原到〈' + data.snapshotName + '〉版本（已自動備份現況）');
-      return loadFromGas({ retries: 2, retryDelayMs: 1500 });
-    })
-    .catch(function (err) {
-      restoreError.textContent = '網路錯誤，請重試：' + err.message;
-    })
-    .finally(function () {
-      restoreConfirmBtn.disabled = false;
-      restoreConfirmBtn.textContent = '確定還原';
-    });
-}
-
-restoreCancelBtn.addEventListener('click', closeRestoreConfirm);
-restoreConfirmBtn.addEventListener('click', confirmRestore);
-</script>
-
-<script>
-// Membership writes are authenticated by the central app; public member numbers no longer authorize changes.
-editToggleBtn.addEventListener('click',function(event){event.preventDefault();event.stopImmediatePropagation();window.location.assign('https://hua-urban.com/admin/members/');},true);
-</script>
 </body>
 </html>
