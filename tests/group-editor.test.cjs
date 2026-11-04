@@ -8,8 +8,8 @@ const vm = require('node:vm');
 
 const pagePath = path.resolve(__dirname, '..', 'index.html');
 const pageHtml = fs.readFileSync(pagePath, 'utf8');
-const runtimeStart = pageHtml.indexOf('<script src="data.js');
-assert.notEqual(runtimeStart, -1, 'the page should include its seed data before the app scripts');
+const runtimeStart = pageHtml.indexOf('<div class="toast" id="toast"');
+assert.notEqual(runtimeStart, -1, 'the app scripts follow the toast element');
 const appScripts = [...pageHtml.slice(runtimeStart).matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .map((match) => match[1]);
 assert.equal(appScripts.length, 2, 'the tests should execute the page data loader and group editor scripts');
@@ -118,7 +118,7 @@ async function flushPromises() {
   }
 }
 
-async function createHarness({ version = 1, initialChains = ['A'] } = {}) {
+async function createHarness({ version = 1, initialChains = ['A'], offline = false } = {}) {
   const elements = new Map();
   const requests = [];
   let liveRoster = makeRoster(version, initialChains);
@@ -153,7 +153,7 @@ async function createHarness({ version = 1, initialChains = ['A'] } = {}) {
     throw new Error(`Unexpected fixture request: ${request.method} ${request.url}`);
   }
 
-  fetchBehavior = defaultFetch;
+  fetchBehavior = offline ? async () => { throw new Error('fixture offline'); } : defaultFetch;
   async function fetchMock(input, options = {}) {
     const body = options.body ? JSON.parse(options.body) : null;
     const request = {
@@ -182,7 +182,7 @@ async function createHarness({ version = 1, initialChains = ['A'] } = {}) {
 
   const context = vm.createContext({
     document,
-    window: { PT_SEED: { groups: [], members: [] } },
+    window: {},
     fetch: fetchMock,
     console: { error() {}, log() {} },
     crypto: { randomUUID: () => `fixture-request-${++uuid}` },
@@ -397,4 +397,41 @@ test('obsolete membership redirect and snapshot/history/restore controls are abs
   assert.doesNotMatch(pageHtml, /id="(?:snapshotBtn|historyBtn|snapshotModalOverlay|historyModalOverlay|restoreConfirmOverlay)"/);
   assert.doesNotMatch(pageHtml, /action:\s*['"](?:snapshot|restore|addMember)['"]/);
   assert.match(pageHtml, /id="editToggleBtn"[^>]*>組長編輯模式</);
+});
+
+test('member numbers are escaped wherever they reach HTML', async () => {
+  const hostileId = '9"><img src=x onerror=alert(1)>';
+  const harness = await createHarness();
+  const roster = makeRoster(3, ['A']);
+  roster.members.push({ id: hostileId, name: 'Hostile Fixture', profession: '', chains: ['B'] });
+  roster.members.push({ id: '<b>u</b>', name: 'Unassigned Fixture', profession: '', chains: [] });
+  harness.setRoster(roster);
+  run(harness, 'loadFromGas()');
+  await harness.settle();
+
+  const board = harness.elements.get('board').innerHTML;
+  const unassigned = harness.elements.get('unassignedList').innerHTML;
+  assert.match(board, /Hostile Fixture/);
+  for (const html of [board, unassigned]) {
+    assert.doesNotMatch(html, /<img|<b>/);
+  }
+  assert.match(board, /data-id="9&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;"/);
+
+  harness.elements.get('codeInput').value = FIXTURE_CODE;
+  run(harness, 'submitCode()');
+  await harness.settle();
+  run(harness, 'openAddGuestModal()');
+  assert.doesNotMatch(harness.elements.get('rosterSelect').innerHTML, /<img|<b>/);
+});
+
+test('when neither the live roster nor the snapshot loads, the page says so instead of showing a bundled roster', async () => {
+  const harness = await createHarness({ offline: true });
+
+  assert.ok(harness.requests.some((request) => request.url.startsWith('data.json')), 'the snapshot was tried');
+  assert.doesNotMatch(harness.elements.get('board').innerHTML, /member-card/);
+  assert.doesNotMatch(harness.elements.get('unassignedList').innerHTML, /member-card/);
+  assert.match(harness.elements.get('board').innerHTML, /暫時無法載入名單/);
+  assert.equal(harness.elements.get('unassignedSection').hidden, true);
+  assert.equal(run(harness, 'latestRosterAuthoritative'), false);
+  assert.doesNotMatch(pageHtml, /src="data\.js|PT_SEED/);
 });
