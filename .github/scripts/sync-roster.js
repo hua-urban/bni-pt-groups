@@ -1,8 +1,11 @@
 // GitHub Actions 排程用：抓 GAS 唯讀 doGet 最新名單，驗證合法後落地成 repo 根目錄的 data.json。
 // 目的：讓 index.html 開頁優先讀這份靜態快照（近乎瞬間），不用每次都等 GAS 2~3 秒。
 //
-// 驗證失敗（HTTP 非 2xx／JSON 格式錯誤／ok !== true／members 為空）一律丟例外、
-// process.exit(1) 結束，不觸碰既有 data.json，避免把壞資料 commit 上去。
+// 驗證失敗（HTTP 非 2xx／JSON 格式錯誤／ok !== true／不是 schema 2／members 為空／
+// 人數比現有 data.json 少超過兩成）一律丟例外、process.exit(1) 結束，不觸碰既有 data.json，
+// 避免把壞資料 commit 上去。真的一次退會這麼多人時，手動執行 workflow 勾選 allow_headcount_drop。
+//
+// data.json 是公開檔案，只寫看板實際用到的欄位（白名單），memberId、aliases 等後端欄位不落地。
 //
 // 2026-08-19 加上重試：Google Apps Script 的 /exec 會 302 導到 script.googleusercontent.com，
 // Google 端偶發回 404（實測 30 次排程中 6 次，約 20%），但同一個 URL 手動打是通的。
@@ -14,7 +17,9 @@ const fs = require('fs');
 const path = require('path');
 
 const GAS_URL = process.env.GAS_URL;
-const OUTPUT_PATH = path.join(__dirname, '..', '..', 'data.json');
+const OUTPUT_PATH = process.env.ROSTER_OUTPUT_PATH || path.join(__dirname, '..', '..', 'data.json');
+const MIN_HEADCOUNT_RATIO = 0.8;
+const ALLOW_HEADCOUNT_DROP = process.env.ALLOW_HEADCOUNT_DROP === 'true';
 
 const MAX_ATTEMPTS = 4;
 const RETRY_DELAY_MS = [3000, 8000, 20000]; // 第 1/2/3 次失敗後各等多久
@@ -24,8 +29,26 @@ function sleep(ms) {
   return new Promise(function (resolve) { setTimeout(resolve, ms); });
 }
 
+// 現有快照的人數；沒有檔案或讀不懂時回 0，代表沒有比較基準。
+function currentHeadcount() {
+  let text;
+  try {
+    text = fs.readFileSync(OUTPUT_PATH, 'utf8');
+  } catch (err) {
+    if (err.code === 'ENOENT') return 0;
+    throw err;
+  }
+  try {
+    const members = JSON.parse(text).members;
+    return Array.isArray(members) ? members.length : 0;
+  } catch (err) {
+    console.warn('現有 data.json 無法解析，略過人數比較：' + err.message);
+    return 0;
+  }
+}
+
 // 抓一次並驗證。任何一關不過就丟例外，交給外層決定要不要重試。
-async function fetchOnce() {
+async function fetchOnce(previousCount) {
   // 帶時間戳當 cache-busting query，避免任何中介層快取住舊回應。
   const url = GAS_URL + '?t=' + Date.now();
   const res = await fetch(url, {
@@ -41,21 +64,27 @@ async function fetchOnce() {
   if (!data || data.ok !== true) {
     throw new Error('GAS 回應 ok !== true 或格式不合法');
   }
+  if (data.schemaVersion !== 2 || !Number.isSafeInteger(data.rosterVersion) || data.rosterVersion < 0) {
+    throw new Error('GAS 回應不是 schema 2（schemaVersion=' + data.schemaVersion + '）');
+  }
   if (!Array.isArray(data.members) || data.members.length === 0) {
     throw new Error('GAS 回應 members 為空或不是陣列');
   }
   if (!Array.isArray(data.groups)) {
     throw new Error('GAS 回應 groups 不是陣列');
   }
+  if (!ALLOW_HEADCOUNT_DROP && data.members.length < previousCount * MIN_HEADCOUNT_RATIO) {
+    throw new Error('人數驟降：GAS 回 ' + data.members.length + ' 人，現有快照 ' + previousCount + ' 人');
+  }
 
   return data;
 }
 
-async function fetchWithRetry() {
+async function fetchWithRetry(previousCount) {
   let lastErr;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
-      const data = await fetchOnce();
+      const data = await fetchOnce(previousCount);
       if (attempt > 1) {
         console.log('第 ' + attempt + ' 次嘗試成功');
       }
@@ -77,15 +106,23 @@ async function main() {
     throw new Error('缺少環境變數 GAS_URL');
   }
 
-  const data = await fetchWithRetry();
+  const data = await fetchWithRetry(currentHeadcount());
 
-  // 只落地 members/groups，刻意不寫入 generatedAt 這類每次呼叫必變的欄位，
+  // 刻意不寫入 generatedAt 這類每次呼叫必變的欄位，
   // 讓後續 `git diff --quiet` 能準確反映「名單內容有沒有真的變」，
   // 避免每 10 分鐘都因時間戳不同而產生空轉 commit。
-  const snapshot = { members: data.members, groups: data.groups };
-  if (Number.isSafeInteger(data.rosterVersion)) {
-    for (const key of ['schemaVersion','rosterVersion','effectiveAsOf','contentHash']) snapshot[key]=data[key];
-  }
+  const snapshot = {
+    members: data.members.map(function (m) {
+      return { id: m.id, name: m.name, profession: m.profession, chains: m.chains };
+    }),
+    groups: data.groups.map(function (g) {
+      return { code: g.code, name: g.name, leader: g.leader, schedule: g.schedule };
+    }),
+    schemaVersion: data.schemaVersion,
+    rosterVersion: data.rosterVersion,
+    effectiveAsOf: data.effectiveAsOf,
+    contentHash: data.contentHash,
+  };
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
   console.log('已寫入 data.json：members=' + data.members.length + ' groups=' + data.groups.length);

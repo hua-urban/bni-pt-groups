@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
+    inputs:
+      allow_headcount_drop:
+        description: '確認本次人數真的少了兩成以上（大量退會），允許寫入'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -31,6 +36,7 @@ jobs:
       - name: 抓取 GAS 最新名單並驗證後寫入 data.json
         env:
           GAS_URL: https://script.google.com/macros/s/AKfycbxDLC_mhRaLhlycnLWhRmdTdI9HU6BHQEXhdANMZL0aF0yTTrMzvxHi0u-YyHMJCP9Jzg/exec
+          ALLOW_HEADCOUNT_DROP: ${{ inputs.allow_headcount_drop }}
         run: node .github/scripts/sync-roster.js
 
       - name: 只有內容真的變更才 commit + push
