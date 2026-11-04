@@ -249,6 +249,18 @@
 
   .unassigned-list .member-card { width: 200px; }
 
+  .roster-unavailable {
+    grid-column: 1 / -1;
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 40px 16px;
+    text-align: center;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
   footer {
     text-align: center;
     color: var(--ink-dim);
@@ -499,7 +511,7 @@
 <main>
   <div id="loadStatus"></div>
 
-  <div class="unassigned-section">
+  <div class="unassigned-section" id="unassignedSection">
     <h2>尚未分組<span class="unassigned-hint">這些夥伴尚未分組，可進編輯模式歸類</span></h2>
     <div class="unassigned-list" id="unassignedList"></div>
   </div>
@@ -550,7 +562,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="data.js?v=20260730"></script>
 <script>
 /* ============================================================
    GAS 後端網址（唯讀 doGet，正式部署已上線）
@@ -561,6 +572,7 @@ const CHAIN_ORDER = ['A', 'B', 'C', 'D', 'E'];
 
 const boardEl = document.getElementById('board');
 const unassignedEl = document.getElementById('unassignedList');
+const unassignedSectionEl = document.getElementById('unassignedSection');
 const loadStatusEl = document.getElementById('loadStatus');
 const searchInput = document.getElementById('searchInput');
 const searchHint = document.getElementById('searchHint');
@@ -571,6 +583,7 @@ let latestRosterAuthoritative = false;
 let latestRosterVersion = null;
 let latestRosterReadId = 0;
 const UNCONFIRMED_ROSTER_STATUS = '無法確認最新名冊，目前畫面僅供參考；暫停編輯。';
+const ROSTER_UNAVAILABLE_STATUS = '暫時無法載入名單，請稍後重新整理頁面。';
 
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -587,9 +600,9 @@ function memberCardHtml(m, currentCode) {
       }).join('') + '</div>'
     : '';
   return (
-    '<div class="member-card" data-id="' + m.id + '" data-name="' + escapeHtml(m.name) + '">' +
+    '<div class="member-card" data-id="' + escapeHtml(m.id) + '" data-name="' + escapeHtml(m.name) + '">' +
       '<div class="m-name">' + escapeHtml(m.name) +
-        '<span class="m-id">#' + m.id + '</span>' +
+        '<span class="m-id">#' + escapeHtml(m.id) + '</span>' +
       '</div>' +
       '<div class="m-profession">' + escapeHtml(m.profession || '') + '</div>' +
       pillsHtml +
@@ -633,6 +646,7 @@ function render(data) {
   }).join('');
 
   const unassigned = members.filter(function (m) { return !m.chains || m.chains.length === 0; });
+  unassignedSectionEl.hidden = false;
   unassignedEl.innerHTML = unassigned.length
     ? unassigned.map(function (m) { return memberCardHtml(m, null); }).join('')
     : '<div class="empty-hint">目前所有夥伴皆已分組</div>';
@@ -736,12 +750,19 @@ initialRosterLoad.catch(function () {
     })
     .catch(function(){
       if (initialRosterReadId !== latestRosterReadId) return;
-      render(window.PT_SEED || {groups:[],members:[]});
-      latestRosterAuthoritative=false;
-      latestRosterVersion=null;
-      loadStatusEl.textContent=UNCONFIRMED_ROSTER_STATUS;
+      showRosterUnavailable();
     });
 });
+
+function showRosterUnavailable() {
+  LATEST_DATA = { groups: [], members: [] };
+  latestRosterAuthoritative = false;
+  latestRosterVersion = null;
+  boardEl.innerHTML = '<div class="roster-unavailable">' + ROSTER_UNAVAILABLE_STATUS + '</div>';
+  unassignedEl.innerHTML = '';
+  unassignedSectionEl.hidden = true;
+  loadStatusEl.textContent = '';
+}
 </script>
 
 <script>
@@ -957,7 +978,7 @@ function openAddGuestModal() {
 
   const roster = (LATEST_DATA.members || []).slice().sort(function (a, b) { return Number(a.id) - Number(b.id); });
   rosterSelect.innerHTML = roster.map(function (m) {
-    return '<option value="' + m.id + '">#' + m.id + ' ' + escapeHtml(m.name) + '</option>';
+    return '<option value="' + escapeHtml(m.id) + '">#' + escapeHtml(m.id) + ' ' + escapeHtml(m.name) + '</option>';
   }).join('');
   rosterSelect.disabled = false;
 
