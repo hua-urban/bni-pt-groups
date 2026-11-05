@@ -217,12 +217,6 @@
       ]
     },
     {
-      "id": 27,
-      "name": "陳黎玲Jossie",
-      "profession": "會展空間裝修設計-新竹以北",
-      "chains": []
-    },
-    {
       "id": 28,
       "name": "林佩君",
       "profession": "仲介經紀人-台北市中山區",
@@ -495,7 +489,7 @@
     }
   ],
   "schemaVersion": 2,
-  "rosterVersion": 1,
+  "rosterVersion": 4,
   "effectiveAsOf": "2026-11-05",
-  "contentHash": "8f9981ec1d5726d1f4b08eb16206129f4afcb5288b078203a3c860929ca87d60"
+  "contentHash": "0ce8209e6148ab992f26d93cd910bf753bae141ba74a76a4215e3f656844863e"
 }
