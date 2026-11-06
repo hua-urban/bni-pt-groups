@@ -1,0 +1,27 @@
+name: 後端網址檢查
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: hua-urban/hua-urban.github.io
+          ref: master
+          path: _backend-guard
+          sparse-checkout: automation
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: 檢查程式及排程的停用端點
+        run: node _backend-guard/automation/check-backend-contracts.mjs --root . --source-only
+      - name: 核對正式服務
+        if: github.event_name == 'workflow_dispatch'
+        run: node _backend-guard/automation/check-backend-contracts.mjs --root .
