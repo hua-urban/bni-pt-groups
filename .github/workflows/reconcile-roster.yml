@@ -40,7 +40,7 @@ jobs:
         env:
           # 唯讀端點，本來就是公開的（前端 JS 裡看得到），不需要當祕密管理。
           PT_GAS_URL: https://script.google.com/macros/s/AKfycbxDLC_mhRaLhlycnLWhRmdTdI9HU6BHQEXhdANMZL0aF0yTTrMzvxHi0u-YyHMJCP9Jzg/exec
-          TRAINING_URL: https://script.google.com/macros/s/AKfycbwH2PRrkEtuAsr0SPxu8DzA-xlBhjhMN3rYaaz2oNvC5nYpfuvf64hscHfwC6k1P9QuPg/exec
+          TRAINING_URL: https://script.google.com/macros/s/AKfycbxQWQmv4KX4kmS_wDPvoDKCCxITGFhDF9cs7OFv-217oxdC4T-JoavFUmgGKIBI8KeYjA/exec
           PORTAL_URL: https://hua-urban.github.io/
           ETEAM_URL: https://hua-urban.github.io/e-team-grid/
           # 這兩個要當祕密：拿到就能叫小幫手發訊息給資訊長。
