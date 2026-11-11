@@ -142,7 +142,8 @@
       "name": "諸紀平",
       "profession": "住宅室內設計裝修-台北市",
       "chains": [
-        "A"
+        "A",
+        "B"
       ]
     },
     {
@@ -479,7 +480,7 @@
       "code": "D",
       "name": "商用不動產升級鏈",
       "leader": "陳向柔Naomi",
-      "schedule": "每月第 2、4 個週二・線上 21:00–22:00／實體 19:00–21:00"
+      "schedule": "每月第 2、4 個週二・線上 21:00–22:00"
     },
     {
       "code": "E",
@@ -489,7 +490,7 @@
     }
   ],
   "schemaVersion": 2,
-  "rosterVersion": 4,
+  "rosterVersion": 5,
   "effectiveAsOf": "2026-11-11",
-  "contentHash": "d279c6e35159e87ff231d4707fa4c83487c1442171baa50bb296ebb036b47977"
+  "contentHash": "179823a32ffaa6c7fc7dbab8f5540d59155df9add502d3b82d4010ed406b8ca4"
 }
