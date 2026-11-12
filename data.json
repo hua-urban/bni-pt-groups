@@ -343,7 +343,7 @@
     },
     {
       "id": 43,
-      "name": "洪嘉璿左左",
+      "name": "洪嘉璿（左左）",
       "profession": "MMT天賦諮詢師",
       "chains": [
         "E"
@@ -485,12 +485,12 @@
     {
       "code": "E",
       "name": "房產客戶成長鏈",
-      "leader": "洪嘉璿左左",
+      "leader": "洪嘉璿（左左）",
       "schedule": "每月第 1、3 個週二・線上 20:30–21:30"
     }
   ],
   "schemaVersion": 2,
-  "rosterVersion": 5,
-  "effectiveAsOf": "2026-11-12",
-  "contentHash": "8ee0ba4136cac088f815fdd91d282b87a8d9dedd932c6eb8d8c7ae2be0a2e606"
+  "rosterVersion": 6,
+  "effectiveAsOf": "2026-11-13",
+  "contentHash": "f7fbd79cac5cb7cbdfaa1ba7954970bbd035f187e0cb1b06551616e2f942ad2e"
 }
