@@ -425,14 +425,6 @@
       ]
     },
     {
-      "id": 55,
-      "name": "吳念鎧",
-      "profession": "仲介經紀人-大新竹區",
-      "chains": [
-        "A"
-      ]
-    },
-    {
       "id": 56,
       "name": "沈瑞婷",
       "profession": "智慧物流導入顧問",
@@ -490,7 +482,7 @@
     }
   ],
   "schemaVersion": 2,
-  "rosterVersion": 6,
-  "effectiveAsOf": "2026-11-24",
-  "contentHash": "1a4fee1132ff87e9822ba1226dc1976ae8307748c26c32948a3afc5019f9545d"
+  "rosterVersion": 7,
+  "effectiveAsOf": "2026-11-25",
+  "contentHash": "35ea29f465b4bc07b51c6edac0788032c31741bde47a4077ff44cdfffbde9e6e"
 }
