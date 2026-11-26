@@ -50,7 +50,7 @@ async function withRetry(label, fn) {
 }
 
 // ── 六處各自怎麼數 ─────────────────────────────────────────────────────
-// 每一項回傳 { name, count, names booleanable }。names 拿得到就拿，用來算「少了誰」。
+// 每一項回傳 { count, names }。names 用來算「少了誰」。
 
 async function countPtGroups(url) {
   const d = JSON.parse(await fetchText(url));
@@ -69,9 +69,10 @@ async function countTraining(url) {
 // 避免頁面改版後數到不相干的東西還以為對得上。
 async function countPortal(url) {
   const html = await fetchText(url);
-  const rows = html.match(/<tr\s+data-n="/g) || [];
-  if (rows.length === 0) throw new Error('頁面上找不到名冊列，可能改版了');
-  return { count: rows.length, names: (html.match(/data-n="([^"]*)"/g) || []).map((s) => s.slice(8, -1)) };
+  // 人數和名字都只從名冊列取，頁面別處的 data-n 不算，避免名字清單比人數多、掩蓋缺人。
+  const names = Array.from(html.matchAll(/<tr\s+data-n="([^"]*)"/g), (m) => m[1]);
+  if (names.length === 0) throw new Error('頁面上找不到名冊列，可能改版了');
+  return { count: names.length, names };
 }
 
 async function countETeam(url) {
@@ -136,18 +137,22 @@ async function main() {
     if (r.name === 'E 組九宮格') {
       const missing = missingFrom(baseline.names, r.names);
       // E 組現役成員本來就不在這張表裡，扣掉之後還缺人才算異常。
-      // 這裡不知道誰是 E 組現役，所以只在「缺的人數比上次多」時才報——
-      // 改用絕對值判斷會天天誤報。實作上以 E 組現役上限 20 人為容忍值。
+      // 這裡不知道誰是 E 組現役，只能用容忍值：缺的人超過 20（E 組現役上限）才報，
+      // 否則每天都會把 E 組現役成員當成缺人誤報。
       if (missing.length > 20) {
         mismatches.push({ name: r.name, detail: `比基準少 ${missing.length} 人，超出 E 組現役人數的合理範圍`, fix: r.fix, missing });
       }
       continue;
     }
-    if (r.count !== baseline.count) {
-      const missing = missingFrom(baseline.names, r.names);
+    // 人數相同不代表名單相同：同一週一人退會、一人入會，只改了數字對得上的那一半，
+    // 光比人數會互相抵銷、判成一致。所以人數對得上也要比名字。
+    const missing = missingFrom(baseline.names, r.names);
+    if (r.count !== baseline.count || missing.length > 0) {
       mismatches.push({
         name: r.name,
-        detail: `${r.count} 人，基準是 ${baseline.count} 人`,
+        detail: r.count !== baseline.count
+          ? `${r.count} 人，基準是 ${baseline.count} 人`
+          : `人數同為 ${r.count} 人，但名單不同`,
         fix: r.fix,
         missing,
       });

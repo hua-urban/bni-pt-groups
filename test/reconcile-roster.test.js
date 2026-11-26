@@ -23,6 +23,7 @@ process.env.NOTIFY_TOKEN = 'test-only-notify-token';
 
 const failedEndpoint = process.env.TEST_FAIL_ENDPOINT;
 const createMismatch = process.env.TEST_CREATE_MISMATCH === '1';
+const swapMember = process.env.TEST_SWAP_MEMBER === '1';
 let failedAttempts = 0;
 let notificationText = '';
 const response = (body) => ({ ok: true, status: 200, text: async () => body });
@@ -35,19 +36,27 @@ global.fetch = async (input) => {
     throw new Error('The operation was aborted due to timeout');
   }
   if (endpoint === 'pt') {
-    return response(JSON.stringify({ ok: true, members: [{ name: 'Demo' }] }));
+    return response(JSON.stringify({ ok: true, members: swapMember
+      ? [{ name: '王小明' }, { name: '陳大華' }]
+      : [{ name: 'Demo' }] }));
   }
   if (endpoint === 'portal') {
+    if (swapMember) return response('<tr data-n="王小明"><tr data-n="陳大華"><div data-n="林新人">');
     return response(createMismatch
       ? '<tr data-n="Demo"><tr data-n="Extra">'
       : '<tr data-n="Demo">');
   }
-  if (endpoint === 'training') return response(JSON.stringify({ names: ['Demo'] }));
+  if (endpoint === 'training') {
+    return response(JSON.stringify({ names: swapMember ? ['王小明', '林新人'] : ['Demo'] }));
+  }
   if (endpoint === 'eteam') {
-    return response('const BRANCH_ROSTER = [\n ["Demo", "專業", ["A"]]\n];');
+    return response(swapMember
+      ? 'const BRANCH_ROSTER = [\n ["王小明", "專業", ["A"]]\n];'
+      : 'const BRANCH_ROSTER = [\n ["Demo", "專業", ["A"]]\n];');
   }
   if (endpoint === 'notify') {
-    notificationText = url.searchParams.get('text') || '';
+    // 只記真正的通知；之後的 admin=recon 心跳不帶 text，不能把通知內容蓋掉。
+    if (url.searchParams.get('admin') === 'notify') notificationText = url.searchParams.get('text') || '';
     return response(JSON.stringify({ ok: true, reason: 'sent' }));
   }
   throw new Error('Unexpected fixture endpoint');
@@ -60,12 +69,13 @@ process.on('beforeExit', () => {
     ' TEST_NO_STALE_CACHE=' + notificationText.includes('本次未使用快取資料代替最新回應') +
     ' TEST_TOKEN_IN_MESSAGE=' + notificationText.includes(process.env.NOTIFY_TOKEN) + '\n'
   );
+  process.stdout.write('TEST_NOTIFICATION=' + JSON.stringify(notificationText) + '\n');
 });
 
 require(scriptPath);
 `;
 
-function runReconciliation(failingEndpoint, createMismatch = false) {
+function runReconciliation(failingEndpoint, createMismatch = false, swapMember = false) {
   const result = spawnSync(process.execPath, ['-e', runner, scriptPath], {
     encoding: 'utf8',
     timeout: 5000,
@@ -73,6 +83,7 @@ function runReconciliation(failingEndpoint, createMismatch = false) {
       ...process.env,
       TEST_FAIL_ENDPOINT: failingEndpoint,
       TEST_CREATE_MISMATCH: createMismatch ? '1' : '0',
+      TEST_SWAP_MEMBER: swapMember ? '1' : '0',
     },
   });
   assert.ifError(result.error);
@@ -106,4 +117,16 @@ test('a completed reconciliation with a roster mismatch remains a normal complet
   assert.match(result.stdout, /TEST_EXIT=0 TEST_FAILED_ATTEMPTS=0 TEST_NO_STALE_CACHE=false TEST_TOKEN_IN_MESSAGE=false/);
   assert.doesNotMatch(result.stdout, new RegExp(notificationTokenSentinel));
   assert.equal(result.status, 0, 'a mismatch is a completed check, not a failed fetch');
+});
+
+test('a copy with the same headcount but a different person is still reported', () => {
+  const result = runReconciliation('', false, true);
+  const line = result.stdout.split('\n').find((l) => l.startsWith('TEST_NOTIFICATION=')) || 'TEST_NOTIFICATION=""';
+  const notification = JSON.parse(line.slice('TEST_NOTIFICATION='.length));
+
+  assert.match(result.stdout, /培訓進度回報：2 人/);
+  assert.match(notification, /培訓進度回報/, 'one out plus one in must not cancel out to "all consistent"');
+  assert.match(notification, /少了：陳大華/);
+  assert.doesNotMatch(notification, /對外夥伴入口頁/, 'portal names come only from roster rows, like its count');
+  assert.equal(result.status, 0);
 });
